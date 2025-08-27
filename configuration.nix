@@ -7,7 +7,7 @@
       
       # Language & Users.
       ./modules/locale.nix
-      ./modules/users/Tsukia
+      ./modules/users/Tsukia.nix
 
       # Desktop
       ./modules/desktops/audio.nix
