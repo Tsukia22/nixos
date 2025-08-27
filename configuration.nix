@@ -9,6 +9,7 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./modules/locale.nix
+      ./modules/users/Tsukia
     ];
 
   # Bootloader.
@@ -61,17 +62,6 @@
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.tsukia = {
-    isNormalUser = true;
-    description = "Tsukia";
-    extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [
-      kdePackages.kate
-      git
-    ];
-  };
 
   # Install firefox.
   programs.firefox.enable = true;
