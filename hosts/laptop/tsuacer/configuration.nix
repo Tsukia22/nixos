@@ -25,15 +25,16 @@
   };
 
   services.syncthing = {
-      enable = true;
-      openDefaultPorts = true; # opens TCP/UDP 22000, UDP 21027
-      settings.gui = {
-        user = "myuser";
-        password = "mypassword";
-        address = "0.0.0.0:8384";
-   };
+    enable = true;
+    user = "tsukia";
+    openDefaultPorts = true;
+    settings.gui = {
+      user = "user";
+      password = "password";
+      address = "0.0.0.0:8384";
+    };
   };
-  
+
   system.stateVersion = "25.05"; 
 
 }
