@@ -31,8 +31,9 @@
         user = "myuser";
         password = "mypassword";
         address = "0.0.0.0:8384";
+   };
   };
-
+  
   system.stateVersion = "25.05"; 
 
 }
