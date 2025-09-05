@@ -1,6 +1,6 @@
 # How to get NixOS (with a git repo of a nix flake configuration) running on your machine.
-# This guide was created from recent memory, so it could contain some errors.
-
+### This guide was created from recent memory, so it could contain some errors.
+```bash
 # 1. Download the minimal install NixOS ISO and create a bootable USB.
 
 # 2. Insert the USB into the computer and boot into the USB partition.
@@ -86,3 +86,4 @@ cd nixos
 sudo nixos-rebuild switch --impure --flake .#xan01
 
 # Enjoy
+```
