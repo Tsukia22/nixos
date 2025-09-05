@@ -32,11 +32,11 @@
   #   wantedBy = [ "multi-user.target" ];
   # };
 
-  systemd.user.sockets.podman-rootless = {
-    description = "Rootless Podman Socket";
-    socketConfig = {
-      ListenStream = "/run/user/${config.users.users.docky.uid}/podman/podman.sock";
-    };
-    wantedBy = [ "sockets.target" ];
-  };
+  # systemd.user.sockets.podman-rootless = {
+  #   description = "Rootless Podman Socket";
+  #   socketConfig = {
+  #     ListenStream = "/run/user/${config.users.users.docky.uid}/podman/podman.sock";
+  #   };
+  #   wantedBy = [ "sockets.target" ];
+  # };
 }
