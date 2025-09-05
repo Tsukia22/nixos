@@ -26,7 +26,9 @@
   };
 
   # Packages
-  #environment.systemPackages = with pkgs; [ k3s ];
+  environment.systemPackages = with pkgs; [
+    podman
+  ];
 
   system.stateVersion = "25.05";
 }
