@@ -5,12 +5,13 @@
   ];
 
   # Enable lingering for your user so rootless services can run
-  systemd.user.lingering = [ "docky" ];
+  #systemd.user.lingering = [ "docky" ];
 
   # Optional: podman group is created automatically, add user
   users.users.docky = {
     isNormalUser = true;
     extraGroups = [ "podman" ];
+    linger = true;
 
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB77v/sVFBESpr15nlZe9pv/bHxzGFx3to2z9H0Jn+o5 docky"
@@ -27,6 +28,7 @@
   #     ExecStart = "${pkgs.podman}/bin/podman system service --time=0";
   #     Restart = "always";
   #   };
+  #   unitConfig.ConditionUser = "UserA|UserB";
   #   wantedBy = [ "multi-user.target" ];
   # };
 
