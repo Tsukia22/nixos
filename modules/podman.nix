@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ config, pkgs, ... }: {
   # Install Podman
   environment.systemPackages = with pkgs; [
     podman
