@@ -20,6 +20,7 @@
 
   # Networking
   networking.hostName = "xan01";
+  networking.firewall.allowedTCPPorts = [ 25565 ];
   services.openssh = {
     enable = true;
     ports = [ 1993 ];
