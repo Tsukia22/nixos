@@ -17,7 +17,7 @@ in
   systemd.user.services.dockge = {
     description = "Dockge (Podman rootless)";
     serviceConfig = {
-      ExecStart = "${pkgs.podman}/bin/podman run --rm --name dockge \
+      ExecStart = "${pkgs.podman}/bin/podman run --name dockge \
         -p 5001:5001 \
         -v ${homeDir}/dockge/config:/app/config \
         -v ${homeDir}/dockge/data:/app/data \
