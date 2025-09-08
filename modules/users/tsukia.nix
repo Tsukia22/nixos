@@ -3,7 +3,7 @@
   users.users.tsukia = {
     isNormalUser = true;
     description = "Tsukia";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" "podman" ];
     initialPassword = "InitialD";
 
     openssh.authorizedKeys.keys = [
@@ -12,7 +12,7 @@
   };
 
   # sudo 
-  security.sudo.extraRules = [
+  security.sudo.extraRules = (config.security.sudo.extraRules or []) ++ [
     {
       users = [ "tsukia" ];
       commands = [
