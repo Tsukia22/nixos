@@ -7,6 +7,7 @@
       # tsuacer
       ./../../../modules/default.nix
       ./../../../modules/users/tsukia.nix
+      ./../../../modules/podmansecond.nix
     ];
 
   # Bootloader.
@@ -18,7 +19,7 @@
   };
   # Networking
   networking.hostName = "tsuacer";
-  networking.firewall.allowedTCPPorts = [  ];
+  networking.firewall.allowedTCPPorts = [ 5001 ];
   services.openssh = {
     enable = true;
     ports = [ 1993 ];
