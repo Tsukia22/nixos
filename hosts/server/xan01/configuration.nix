@@ -26,11 +26,5 @@
     ports = [ 1993 ];
   };
 
-  # Packages
-  environment.systemPackages = with pkgs; [
-    podman
-    podman-compose
-  ];
-
   system.stateVersion = "25.05";
 }

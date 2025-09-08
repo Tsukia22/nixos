@@ -1,11 +1,10 @@
 { config, pkgs, ... }: {
 
-  users.users.docky = {
-    isNormalUser = true;
-    extraGroups = [ "podman" ];
+virtualisation.podman.enable = true;
+virtualisation.podman.dockerCompat = true;
+virtualisation.podman.dockerSocket.enable = true;
 
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB77v/sVFBESpr15nlZe9pv/bHxzGFx3to2z9H0Jn+o5 docky"
-    ];
-  };
+  environment.systemPackages = with pkgs; [
+    podman-compose
+  ];
 }
