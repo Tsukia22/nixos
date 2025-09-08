@@ -1,4 +1,4 @@
-{ ... }: {
+{ config, ... }:{
   # Tsukia
   users.users.tsukia = {
     isNormalUser = true;
