@@ -1,12 +1,11 @@
 { config, pkgs, ... }:{
 
   imports =
-    [ # Include the results of the hardware scan.
-       /etc/nixos/hardware-configuration.nix # Change this eventually
-      
-      # tsuacer
+    [ ./hardware-configuration.nix
       ./../../../modules/default.nix
       ./../../../modules/users/tsukia.nix
+
+      # tsuacer
       ./../../../modules/podmansecond.nix
     ];
 
