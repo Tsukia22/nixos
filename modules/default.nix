@@ -5,13 +5,10 @@ let
 in
 {
   # Select Bootloader
-  config = if hasUEFI then {
-    boot.loader.systemd-boot.enable = true;
-    boot.loader.efi.canTouchEfiVariables = true;
-  } else {
-    boot.loader.grub.enable = true;
-    boot.loader.grub.device = "/dev/sda";
-  };
+  boot.loader.systemd-boot.enable = hasUEFI;
+  boot.loader.efi.canTouchEfiVariables = hasUEFI;
+  boot.loader.grub.enable = !hasUEFI;
+  boot.loader.grub.device = if !hasUEFI then "/dev/sda" else null;
   
   # Timezone
   time.timeZone = "Europe/Amsterdam";
