@@ -12,12 +12,15 @@
   };
 
   # sudo 
-  security.sudo.extraRules = lib.mkForce (
-    (config.security.sudo.extraRules or []) ++ [
-      {
-        users = [ "tsukia" ];
-        commands = [ { command = "ALL"; options = ["NOPASSWD"]; } ];
-      }
-    ]
-  );
+  security.sudo.extraRules = [
+    {
+      users = [ "tsukia" ];
+      commands = [
+        {
+          command = "ALL";
+          options = [ "NOPASSWD" ];
+        }
+      ];
+    }
+  ];
 }
