@@ -48,17 +48,17 @@ in
   };
 
   # Fail2ban
-  # services.fail2ban = {
-  #   enable = true;
-  #   maxretry = 3;
-  #   bantime = "12h";
-  #   bantime-increment = {
-  #     enable = true;
-  #     multipliers = "1 2 4 8 16 32 64";
-  #     maxtime = "168h";
-  #     overalljails = true;
-  #   };
-  # };
+  services.fail2ban = {
+    enable = true;
+    maxretry = 3;
+    bantime = "12h";
+    bantime-increment = {
+      enable = true;
+      multipliers = "1 2 4 8 16 32 64";
+      maxtime = "168h";
+      overalljails = true;
+    };
+  };
 
   nix.extraOptions = ''
   experimental-features = nix-command flakes
