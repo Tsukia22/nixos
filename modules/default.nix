@@ -1,4 +1,18 @@
-{ pkgs, ... }: {
+{ config, pkgs, lib, ... }:
+  
+let
+  hasUEFI = builtins.pathExists "/sys/firmware/efi"; # Detect UEFI
+in
+{
+  # Select Bootloader
+  config = if hasUEFI then {
+    boot.loader.systemd-boot.enable = true;
+    boot.loader.efi.canTouchEfiVariables = true;
+  } else {
+    boot.loader.grub.enable = true;
+    boot.loader.grub.device = "/dev/sda";
+  };
+  
   # Timezone
   time.timeZone = "Europe/Amsterdam";
 
