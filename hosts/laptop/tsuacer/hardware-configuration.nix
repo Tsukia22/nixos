@@ -4,14 +4,7 @@
   imports =
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
- 
-  # Bootloader.
-  boot.loader.grub = {
-    enable = true;
-    device = "/dev/sda";
-    useOSProber = true;
-  };
-  
+   
   boot.initrd.availableKernelModules = [ "uhci_hcd" "ehci_pci" "ahci" "ums_realtek" "usb_storage" "usbhid" "sd_mod" "sr_mod" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ ];
