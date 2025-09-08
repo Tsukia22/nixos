@@ -6,16 +6,9 @@
       ./../../../modules/users/tsukia.nix
 
       # tsuacer
-      ./../../../modules/podmansecond.nix
+      ./../../../modules/podman.nix
     ];
 
-  # Bootloader.
-  boot.loader.grub = {
-    enable = true;
-    device = "/dev/sda";
-    useOSProber = true;
-    
-  };
   # Networking
   networking.hostName = "tsuacer";
   networking.firewall.allowedTCPPorts = [ 5001 ];
