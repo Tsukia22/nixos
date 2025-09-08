@@ -7,7 +7,9 @@
 
       # tsuacer
       ./../../../modules/podman.nix
-    ];
+      ./../../../modules/pods/dockge.nix    
+      
+      ];
 
   # Networking
   networking.hostName = "tsuacer";
