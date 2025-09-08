@@ -9,10 +9,6 @@
       ./../../../modules/users/tsukia.nix
     ];
 
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
   # Networking
   networking.hostName = "tsu01";
   #networking.firewall.allowedTCPPorts = [  ];
