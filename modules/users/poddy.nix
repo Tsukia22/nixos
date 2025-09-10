@@ -2,7 +2,7 @@
   users.users.poddy = {
     isNormalUser = true;
     description = "poddy";
-    extraGroups = [ "docker" "podman" ];
+    extraGroups = [ "wheel" "docker" "podman" ];
     linger = true;
 
     openssh.authorizedKeys.keys = [
