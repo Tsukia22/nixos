@@ -1,4 +1,3 @@
-Hihi
 # How to get NixOS (with a git repo of a nix flake configuration) running on your machine.
 ### This guide was created from recent memory, so it could contain some errors.
 ```bash
