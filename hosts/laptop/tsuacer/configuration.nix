@@ -1,14 +1,14 @@
 { config, pkgs, ... }:{
 
   imports =
-    [ ./hardware-configuration.nix
+    [
+      ./hardware-configuration.nix
       ./../../../modules/default.nix
       ./../../../modules/users/tsukia.nix
 
       # tsuacer
       ./../../../modules/podman.nix
-      ./../../../modules/pods/dockge.nix
-      ];
+    ];
 
   # Networking
   networking.hostName = "tsuacer";
