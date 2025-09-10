@@ -2,7 +2,7 @@
   users.users.xanedithas = {
     isNormalUser = true;
     description = "Xanedithas";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" "podman" "poddy" ];
     initialPassword = "InitialP";
 
     openssh.authorizedKeys.keys = [
