@@ -1,5 +1,5 @@
 { config, lib, ... }:{
-  # Tsukia x
+  # Tsukia
   users.users.tsukia = {
     isNormalUser = true;
     description = "Tsukia";
