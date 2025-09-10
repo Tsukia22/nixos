@@ -11,7 +11,7 @@
     ];
   };
 
-  # sudo 
+  # sudo  
   security.sudo.extraRules = [
     {
       users = [ "tsukia" ];
