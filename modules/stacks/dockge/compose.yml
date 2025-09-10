@@ -6,7 +6,7 @@ services:
       # Host Port : Container Port
       - 5001:5001
     volumes:
-      - /var/run/podman/podman.sock:/run/docker.sock
+      - /var/run/user/1002/podman/podman.sock:/run/docker.sock
       - /home/poddy/stacks/dockge/data:/app/data
 
       # If you want to use private registries, you need to share the auth file with Dockge:
