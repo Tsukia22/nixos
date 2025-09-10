@@ -1,5 +1,5 @@
 { config, lib, ... }:{
-  # Tsukia
+  # Tsukia x
   users.users.tsukia = {
     isNormalUser = true;
     description = "Tsukia";
@@ -11,7 +11,7 @@
     ];
   };
 
-  # sudo 
+  # sudo  
   security.sudo.extraRules = [
     {
       users = [ "tsukia" ];
