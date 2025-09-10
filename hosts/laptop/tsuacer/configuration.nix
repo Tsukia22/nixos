@@ -7,7 +7,8 @@
 
       # tsuacer
       ./../../../modules/podman.nix
-      # ./../../../modules/pods/dockge.nix    
+      ./../../../modules/pods/dockge.nix    
+      ./../../../modules/users/poddy.nix
       
       ];
 
