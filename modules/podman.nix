@@ -1,5 +1,9 @@
 { config, pkgs, ... }: {
 
+  imports = [
+    ./users/poddy.nix
+  ];
+
   virtualisation.containers.enable = true;
   virtualisation.podman.enable = true;
   virtualisation.podman.dockerCompat = true;
