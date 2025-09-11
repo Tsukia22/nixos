@@ -3,7 +3,7 @@
   users.users.kami = {
     isNormalUser = true;
     description = "kami";
-    extraGroups = [ "wheel" "docker" "podman" "297607" ];
+    extraGroups = [ "wheel" "docker" "podman" ];
     createHome = false;
     linger = true;
     uid = 2000;
