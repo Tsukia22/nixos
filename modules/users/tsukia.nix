@@ -3,8 +3,7 @@
   users.users.tsukia = {
     isNormalUser = true;
     description = "Tsukia";
-    extraGroups = [ "networkmanager" "wheel" "docker" "podman" "poddy" ];
-    initialPassword = "InitialD";
+    extraGroups = [ "networkmanager" "wheel" "docker" "podman" ];
 
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILqHCvFmu1uniKAF2TJuefA8eJ3qWX8p9xqjU/ieuL2n TsukiaPC"
