@@ -4,6 +4,8 @@
     isNormalUser = true;
     description = "kami";
     extraGroups = [ "wheel" "docker" "podman" ];
+    createHome = false;
+    systemd.tmpfiles.rules = [ "d /home/kami 2770 kami podman -" ];
     linger = true;
     uid = 2000;
 
@@ -13,7 +15,7 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB77v/sVFBESpr15nlZe9pv/bHxzGFx3to2z9H0Jn+o5 kami"
     ];
   };
-
+  
   virtualisation.containers.enable = true;
   virtualisation.podman.enable = true;
   virtualisation.podman.dockerCompat = true;
