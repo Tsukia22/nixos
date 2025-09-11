@@ -1,0 +1,13 @@
+services:
+  sftpgo:
+    container_name: sftpgo
+    restart: unless-stopped
+    image: drakkan/sftpgo:v2.6.6-alpine
+    ports:
+      - 2222:2022
+      - 25565:8080
+    volumes:
+      - ./users:/srv/sftpgo
+      - ./data:/var/lib/sftpgo
+      - ./shared:/mnt/docker
+      - /home/kami/stacks:/stacks
