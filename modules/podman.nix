@@ -5,7 +5,6 @@
     description = "kami";
     extraGroups = [ "wheel" "docker" "podman" ];
     createHome = false;
-    systemd.tmpfiles.rules = [ "d /home/kami 2770 kami podman -" ];
     linger = true;
     uid = 2000;
 
@@ -16,6 +15,8 @@
     ];
   };
   
+  systemd.tmpfiles.rules = [ "d /home/kami 2770 kami podman -" ];
+
   virtualisation.containers.enable = true;
   virtualisation.podman.enable = true;
   virtualisation.podman.dockerCompat = true;
