@@ -21,6 +21,9 @@
   # Networking
   networking.hostName = "xan01";
   networking.firewall.allowedTCPPorts = [ 25565 5001 ];
+  networking.firewall.allowedTCPPortRanges = [
+    { from = 30000; to = 40000; }
+  ];
   services.openssh = {
     enable = true;
     ports = [ 1993 ];
