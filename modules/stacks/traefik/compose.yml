@@ -1,0 +1,13 @@
+# docker-compose.yml
+services:
+  traefik:
+    image: traefik:v3.5
+    command:
+      - --api.insecure=true
+      - --providers.docker=true
+      - --entrypoints.web.address=:80
+    ports:
+      - 80:80
+      - 25600:8080
+    volumes:
+      - /var/run/user/2000/podman/podman.sock:/var/run/docker.sock:ro
