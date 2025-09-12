@@ -12,7 +12,7 @@
 
   # Networking
   networking.hostName = "tsuacer";
-  networking.firewall.allowedTCPPorts = [ 5001 ];
+  networking.firewall.allowedTCPPorts = [ 5000-5010 ];
   services.openssh = {
     enable = true;
     ports = [ 1993 ];
