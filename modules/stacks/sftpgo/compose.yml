@@ -1,15 +1,16 @@
 services:
   sftpgo:
-    container_name: sftp
     restart: unless-stopped
     image: drakkan/sftpgo:v2.6.6-alpine
     ports:
-      - 2222:2022
-      - 25565:8080
+      - 2022:2022 # Fix This
     volumes:
       - ./users:/srv/sftpgo
       - data:/var/lib/sftpgo
       - ./shared:/mnt/docker
       - /home/kami/stacks:/stacks
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.sftp.loadbalancer.server.port=8080
 volumes:
   data: null
