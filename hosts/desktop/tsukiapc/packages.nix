@@ -21,7 +21,7 @@
     enable = true;
     # Use Homemanager to put settings per user!
     # userName = "Tsukia";
-    # userEmail = "tsukia@noreply.com";
+    # userEmail = "67642144+Tsukia22@users.noreply.github.com";
   };
 
   # Allow unfree packages
