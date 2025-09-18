@@ -1,13 +1,22 @@
-# docker-compose.yml
 services:
   traefik:
-    image: traefik:v3.5
-    command:
-      - --api.insecure=true
-      - --providers.docker=true
-      - --entrypoints.web.address=:80
+    image: traefik
+    container_name: traefik
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      - TZ=Europe/Amsterdam
+      - CF_API_EMAIL=${CF_API_EMAIL}
+      - CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN}
     ports:
-      - 80:80
-      - 25600:8080
+      - 80:80 # HTTP
+      - 443:443 # HTTPS
+      - 8080:8080 # Dashboard
     volumes:
       - /var/run/user/2000/podman/podman.sock:/var/run/docker.sock:ro
+      - ./traefik.yml:/traefik.yml:ro
+      - traefik:/certs
+volumes:
+  traefik:
+    name: traefik
