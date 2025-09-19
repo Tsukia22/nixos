@@ -1,9 +1,9 @@
 services:
   dashy:
     image: lissy93/dashy
-    # volumes:
-    # - /path/to/my-config.yml:/app/user-data/conf.yml
-    # - /path/to/item-icons:/app/user-data/item-icons/
+    volumes:
+      - ./config.yml:/app/user-data/conf.yml
+      # - /path/to/item-icons:/app/user-data/item-icons/
     environment:
       - NODE_ENV=production
     restart: unless-stopped
