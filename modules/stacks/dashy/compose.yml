@@ -1,0 +1,21 @@
+services:
+  dashy:
+    image: lissy93/dashy
+    # volumes:
+    # - /path/to/my-config.yml:/app/user-data/conf.yml
+    # - /path/to/item-icons:/app/user-data/item-icons/
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - /app/services/healthcheck
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.dashy.loadbalancer.server.port=8080
