@@ -18,6 +18,9 @@
     { from = 25560; to = 25564; } # local use
     { from = 50000; to = 51000; } # external use
   ];
+  networking.firewall.allowedUDPPortRanges = [
+    { from = 50000; to = 51000; } # external use
+  ];
   services.openssh = {
     enable = true;
     ports = [ 1993 ];
