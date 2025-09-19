@@ -11,7 +11,11 @@
 
   # Networking
   networking.hostName = "tsu01";
-  #networking.firewall.allowedTCPPorts = [  ];
+  networking.firewall.allowedTCPPorts = [ 443 80 ];
+  networking.firewall.allowedTCPPortRanges = [
+    { from = 25560; to = 25564; } # local use
+    { from = 50000; to = 51000; } # external use
+  ];
   services.openssh = {
     enable = true;
     ports = [ 1993 ];

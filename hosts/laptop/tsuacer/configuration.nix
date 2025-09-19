@@ -13,8 +13,11 @@
   # Networking
   networking.hostName = "tsuacer";
   boot.kernel.sysctl."net.ipv4.ip_unprivileged_port_start" = 80;
-  networking.firewall.allowedTCPPorts = [ 5001 443 80 ];
-  networking.firewall.allowedTCPPortRanges = [{ from = 25550; to = 25600; }];
+  networking.firewall.allowedTCPPorts = [ 443 80 ];
+  networking.firewall.allowedTCPPortRanges = [
+    { from = 25560; to = 25564; } # local use
+    { from = 50000; to = 51000; } # external use
+  ];
   services.openssh = {
     enable = true;
     ports = [ 1993 ];

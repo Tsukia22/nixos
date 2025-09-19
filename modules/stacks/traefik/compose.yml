@@ -12,7 +12,7 @@ services:
     ports:
       - 80:80 # HTTP
       - 443:443 # HTTPS
-      - 8080:8080 # Dashboard
+      - 25561:8080 # Dashboard
     volumes:
       - /var/run/user/2000/podman/podman.sock:/var/run/docker.sock:ro
       - ./traefik.yml:/traefik.yml:ro
