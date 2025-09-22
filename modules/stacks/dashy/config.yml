@@ -1,48 +1,123 @@
 pageInfo:
-  title: Dashy
-  description: Welcome!
+  title: Comfort Zone
+  description: Here be dragons!
   navLinks:
     - title: GitHub
-      path: https://github.com/Lissy93/dashy
-    - title: Documentation
-      path: https://dashy.to/docs
+      path: https://github.com/Tsukia22/nixos
+      target: newtab
+  footerText: © 2025 My Dashboard — Built with ♥ and coffee
+  logo: >-
+    https://static.wikia.nocookie.net/pkmnshuffle/images/5/5a/Dragonair.png/revision/latest?cb=20170407191603
 appConfig:
-  theme: cherry-blossom
-  layout: horizontal
-  iconSize: large
+  theme: colorful
+  layout: auto
+  iconSize: medium
+  auth:
+    enableGuestAccess: true
+    users:
+      - user: Tsukia
+        hash: 92c7fa28bfd037328544cce72bbbaf4dd604104939ca04d3778ac83b357b7697
+        type: admin
+      - user: Xanedithas
+        hash: fdf61680a7710d7b87277321faa57fb5c1545f2231902fbfacb5dcb0e1245276
+        type: admin
+    enableHeaderAuth: false
+    headerAuth:
+      userHeader: REMOTE_USER
+      proxyWhitelist: []
+    enableKeycloak: false
+  startingView: default
+  defaultOpeningMethod: newtab
+  statusCheck: true
+  statusCheckInterval: 0
+  faviconApi: allesedv
+  routingMode: history
+  enableMultiTasking: false
+  widgetsAlwaysUseProxy: false
+  webSearch:
+    disableWebSearch: false
+    searchEngine: google
+    openingMethod: newtab
+    searchBangs: {}
+  enableFontAwesome: true
+  enableMaterialDesignIcons: true
+  hideComponents:
+    hideHeading: false
+    hideNav: false
+    hideSearch: false
+    hideSettings: false
+    hideFooter: false
+  showSplashScreen: false
+  preventWriteToDisk: false
+  preventLocalSave: false
+  disableConfiguration: false
+  disableConfigurationForNonAdmin: false
+  allowConfigEdit: true
+  enableServiceWorker: false
+  disableContextMenu: false
+  disableUpdateChecks: false
+  disableSmartSort: false
+  enableErrorReporting: false
 sections:
-  - name: Getting Started
-    icon: fas fa-rocket
+  - name: Public Services
+    displayData:
+      sortBy: default
+      rows: 2
+      cols: 3
+      collapsed: false
+      hideForGuests: false
+    items: []
+    icon: fas fa-globe
+    filteredItems: []
+  - name: Internal Services
+    displayData:
+      sortBy: default
+      rows: 2
+      cols: 1
+      collapsed: false
+      hideForGuests: true
     items:
-      - title: Dashy Live
-        description: Development a project management links for Dashy
-        icon: https://i.ibb.co/qWWpD0v/astro-dab-128.png
-        url: https://live.dashy.to/
+      - &ref_0
+        title: Dockge
+        icon: https://cdn.jsdelivr.net/gh/selfhst/icons/webp/dockge.webp
+        url: http://192.168.1.34:25560/
         target: newtab
-        id: 0_1481_dashylive
-      - title: GitHub
-        description: Source Code, Issues and Pull Requests
-        url: https://github.com/lissy93/dashy
-        icon: favicon
-        id: 1_1481_github
-      - title: Docs
-        description: Configuring & Usage Documentation
-        provider: Dashy.to
-        icon: far fa-book
-        url: https://dashy.to/docs
-        id: 2_1481_docs
-      - title: Showcase
-        description: See how others are using Dashy
-        url: https://github.com/Lissy93/dashy/blob/master/docs/showcase.md
-        icon: far fa-grin-hearts
-        id: 3_1481_showcase
-      - title: Config Guide
-        description: See full list of configuration options
-        url: https://github.com/Lissy93/dashy/blob/master/docs/configuring.md
-        icon: fas fa-wrench
-        id: 4_1481_configguide
-      - title: Support
-        description: Get help with Dashy, raise a bug, or get in contact
-        url: https://github.com/Lissy93/dashy/blob/master/.github/SUPPORT.md
-        icon: far fa-hands-helping
-        id: 5_1481_support
+        statusCheck: true
+        id: 0_1697_dockge
+      - &ref_1
+        title: Traefik
+        icon: https://cdn.jsdelivr.net/gh/selfhst/icons/webp/traefik.webp
+        url: http://192.168.1.34:25561
+        statusCheck: true
+        id: 1_1697_traefik
+    icon: fas fa-wrench
+    filteredItems:
+      - *ref_0
+      - *ref_1
+  - name: Monitoring
+    displayData:
+      sortBy: default
+      rows: 2
+      cols: 3
+      collapsed: false
+      hideForGuests: false
+    items: []
+    icon: fas fa-desktop
+    filteredItems: []
+  - name: Storage & SFTP
+    displayData:
+      sortBy: default
+      rows: 2
+      cols: 1
+      collapsed: false
+      hideForGuests: false
+    items:
+      - &ref_2
+        title: SFTPGo
+        icon: https://cdn.jsdelivr.net/gh/selfhst/icons/webp/sftpgo.webp
+        url: https://sftp.tsukia.nl
+        statusCheck: true
+        id: 0_1144_sftpgo
+    icon: fas fa-suitcase
+    filteredItems:
+      - *ref_2
