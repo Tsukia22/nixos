@@ -2,8 +2,8 @@ services:
   sftp:
     restart: unless-stopped
     image: drakkan/sftpgo:v2.6.6-alpine
-    ports:
-      - 2022:2022 # Fix This
+    #ports:
+    #  - 2022:2022 # For SFTP client access such as FileZilla
     volumes:
       - ./users:/srv/sftpgo
       - data:/var/lib/sftpgo
