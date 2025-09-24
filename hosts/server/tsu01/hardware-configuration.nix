@@ -1,5 +1,3 @@
-  GNU nano 8.6                                                                          hardware-configuration.nix                                                                                    
-
 { config, lib, pkgs, modulesPath, ... }:
 
 {
