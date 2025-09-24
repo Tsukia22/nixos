@@ -1,5 +1,5 @@
 services:
-  dashy:
+  dash:
     image: lissy93/dashy
     volumes:
       - ./config.yml:/app/user-data/conf.yml
@@ -18,4 +18,4 @@ services:
       start_period: 40s
     labels:
       - traefik.enable=true
-      - traefik.http.services.dashy.loadbalancer.server.port=8080
+      - traefik.http.services.dash.loadbalancer.server.port=8080
