@@ -98,11 +98,45 @@ sections:
     displayData:
       sortBy: default
       rows: 2
-      cols: 3
+      cols: 1
+      collapsed: false
+      hideForGuests: false
+    widgets:
+      - id: 0_1062_uptimekuma
+        type: uptime-kuma
+        useProxy: true
+        options:
+          url: https://up.tsukia.nl/metrics
+          apiKey: 
+    icon: fas fa-desktop
+    items:
+      - &ref_2
+        title: Uptime Kuma
+        icon: https://cdn.jsdelivr.net/gh/selfhst/icons/webp/uptime-kuma.webp
+        url: https://up.tsukia.nl/status/games
+        target: newtab
+        id: 0_1062_uptimekuma
+    filteredItems:
+      - *ref_2
+  - name: Media
+    displayData:
+      sortBy: default
+      rows: 2
+      cols: 1
       collapsed: false
       hideForGuests: false
     items: []
-    icon: fas fa-desktop
+    icon: fas fa-tag
+    filteredItems: []
+  - name: Entertainment
+    displayData:
+      sortBy: default
+      rows: 1
+      cols: 1
+      collapsed: false
+      hideForGuests: false
+    items: []
+    icon: fas fa-link
     filteredItems: []
   - name: Storage & SFTP
     displayData:
@@ -112,7 +146,7 @@ sections:
       collapsed: false
       hideForGuests: false
     items:
-      - &ref_2
+      - &ref_3
         title: SFTPGo
         icon: https://cdn.jsdelivr.net/gh/selfhst/icons/webp/sftpgo.webp
         url: https://sftp.tsukia.nl
@@ -120,4 +154,4 @@ sections:
         id: 0_1144_sftpgo
     icon: fas fa-suitcase
     filteredItems:
-      - *ref_2
+      - *ref_3
