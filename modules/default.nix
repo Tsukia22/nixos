@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:{
+{ config, pkgs, lib, ... }: {
   
   # Timezone
   time.timeZone = "Europe/Amsterdam";
