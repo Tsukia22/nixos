@@ -7,13 +7,16 @@ services:
       - 25560:5001
     volumes:
       - /var/run/user/2000/podman/podman.sock:/run/docker.sock
-      - ./data:/app/data
+      - data:/app/data
 
       # If you want to use private registries, you need to share the auth file with Dockge:
       # - /root/.docker/:/root/.docker
 
       # Stacks Directory
-      - /home/kami/stacks:/home/kami/stacks
+      - stacks:/stacks
     environment:
       # Tell Dockge where is your stacks directory
-      - DOCKGE_STACKS_DIR=/home/kami/stacks
+      - DOCKGE_STACKS_DIR=/stacks
+volumes:
+  data: null
+  stacks: null
