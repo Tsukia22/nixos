@@ -9,7 +9,8 @@ services:
       - data:/var/lib/sftpgo
       - shared:/mnt/docker
       - /home/kami/stacks:/stacks
-    # Add more here {StackName}_{Volumename}
+      # Add more here {StackName}_{Volumename}:/{LocationInSFTP}
+      #- mike-mc_data:/srv/sftpgo/data/Mike/mc
     labels:
       - traefik.enable=true
       - traefik.http.services.sftp.loadbalancer.server.port=8080
@@ -17,7 +18,6 @@ volumes:
   users: null
   data: null
   shared: null
+  #mike-mc_data:
+  #  external: true
   # Add more here {StackName}_{Volumename}: null
-
-
-
