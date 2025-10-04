@@ -21,7 +21,7 @@ providers:
   docker:
     endpoint: "unix:///var/run/docker.sock"
     exposedByDefault: false
-    defaultRule: Host(`{{ index .Labels "com.docker.compose.service" }}.CHANGEME.COM`) # Change This
+    defaultRule: Host(`{{ index .Labels "com.docker.compose.service" }}.DOMAIN.nl`) # Change This
 certificatesResolvers:
   letsencrypt:
     acme:

@@ -13,10 +13,9 @@ services:
       # - /root/.docker/:/root/.docker
 
       # Stacks Directory
-      - stacks:/stacks
+      - /home/kami/stacks:/home/kami/stacks
     environment:
       # Tell Dockge where is your stacks directory
-      - DOCKGE_STACKS_DIR=/stacks
+      - DOCKGE_STACKS_DIR=/home/kami/stacks
 volumes:
   data: null
-  stacks: null

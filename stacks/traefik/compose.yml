@@ -18,4 +18,4 @@ services:
       - ./traefik.yml:/traefik.yml:ro
       - certs:/certs
 volumes:
-  certs:
+  certs: null
