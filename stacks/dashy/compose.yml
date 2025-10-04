@@ -1,6 +1,6 @@
 services:
   dash:
-    image: lissy93/dashy
+    image: lissy93/dashy:3.0.1
     volumes:
       - ./config.yml:/app/user-data/conf.yml
       # - /path/to/item-icons:/app/user-data/item-icons/
