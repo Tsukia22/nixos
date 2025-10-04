@@ -16,7 +16,6 @@ services:
     volumes:
       - /var/run/user/2000/podman/podman.sock:/var/run/docker.sock:ro
       - ./traefik.yml:/traefik.yml:ro
-      - traefik:/certs
+      - certs:/certs
 volumes:
-  traefik:
-    name: traefik
+  certs:

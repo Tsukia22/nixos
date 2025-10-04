@@ -8,4 +8,6 @@ services:
     environment:
       EULA: "TRUE"
     volumes:
-      - ./data:/data
+      - data:/data
+volumes:
+  data: null

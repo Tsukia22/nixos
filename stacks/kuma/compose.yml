@@ -10,4 +10,4 @@ services:
     cap_add:
       - NET_RAW # Allow ping
 volumes:
-  data: null # Use defaults
+  data: null
