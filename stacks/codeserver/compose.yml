@@ -1,0 +1,20 @@
+services:
+  code:
+    image: gitpod/openvscode-server
+    stdin_open: true
+    tty: true
+    init: true
+    ports:
+      - 25562:3000 # DEV
+      - 25563:5173 # DEV
+    volumes:
+      # Persist workspace
+      - workspace:/home/workspace
+      # Persist user installations and config
+      - home:/home/openvscode-server
+    #labels:
+    #  - traefik.enable=true
+    #  - traefik.http.services.code.loadbalancer.server.port=3000
+volumes:
+  workspace: null
+  home: null
