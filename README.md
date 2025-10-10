@@ -22,7 +22,6 @@
 * Podman setup // kami in homefolder docker-compose up -d
 * Traefik first time setup : ro
 * Traefik labels explained
-* 
 * Local ports & future external ports
 * Dockge login (default: `25560`)
 
