@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+  vintagestory:
+    image: pepecitron/vintagestory-server
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    ports:
+      - 50200:42420
+    volumes:
+      - data:/data/server-file
+volumes:
+  data: null
