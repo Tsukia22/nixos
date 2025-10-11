@@ -5,8 +5,8 @@ services:
     tty: true
     init: true
     ports:
-      - 25562:3000 # DEV
-      - 25563:5173 # DEV
+      - 25562:3000 # Editor
+      - 25563:5173 # Dev
     volumes:
       # Persist workspace
       - workspace:/home/workspace
