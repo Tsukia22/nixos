@@ -27,6 +27,7 @@
     curl    # Download files from URLs / HTTP requests
     wget    # Download files from URLs (CLI)
     parted  # Disk partitioning
+    btop    # Monitoring
   ];
 
   # SSH hardening
