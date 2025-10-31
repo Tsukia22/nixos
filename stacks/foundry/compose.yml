@@ -1,0 +1,14 @@
+services:
+  foundry:
+    image: felddy/foundryvtt:13
+    volumes:
+      - data:/data
+    environment:
+      - FOUNDRY_PASSWORD=${FOUNDRY_PASSWORD}
+      - FOUNDRY_USERNAME=${FOUNDRY_USERNAME}
+      - FOUNDRY_ADMIN_KEY=${FOUNDRY_ADMIN_KEY}
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.foundry.loadbalancer.server.port=30000
+volumes:
+  data: null
