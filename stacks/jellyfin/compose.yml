@@ -1,22 +1,19 @@
 services:
-  video:
+  mov:
     image: jellyfin/jellyfin
     volumes:
       - config:/config
       - cache:/cache
-      - video:/media
+      - video:/video
     restart: unless-stopped
     labels:
       - traefik.enable=true
       - traefik.http.services.video.loadbalancer.server.port=8096
-    # Optional - alternative address used for autodiscovery
     environment:
-      - JELLYFIN_PublishedServerUrl=https://video.DOMAIN.nl # CHANGE ME!
-    # Optional - may be necessary for docker healthcheck to pass if running in host network mode
+      - JELLYFIN_PublishedServerUrl=https://DOMAIN.nl # CHANGE ME!
     extra_hosts:
       - host.docker.internal:host-gateway
 volumes:
-  config: null # Use defaults
+  config: null
   cache: null
-  video:
-    external: true
+  video: null
