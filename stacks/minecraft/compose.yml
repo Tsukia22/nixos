@@ -1,13 +1,49 @@
 services:
   mc:
     image: itzg/minecraft-server
-    tty: true
-    stdin_open: true
     ports:
-      - "30100:25565"
-    environment:
-      EULA: "TRUE"
+      - 50100:25565
     volumes:
       - data:/data
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+    environment:
+      - EULA=TRUE
+      - OVERRIDE_SERVER_PROPERTIES=TRUE
+      - MEMORY=4G
+      - FORCE-REDOWNLOAD=false
+      - ENABLE_AUTOPAUSE=false
+      - MAX_TICK_TIME=6000
+      - AUTOPAUSE_TIMEOUT_EST=15
+      - AUTOPAUSE_TIMEOUT_INIT=30
+      - AUTOPAUSE_KNOCK_INTERFACE=eth0
+      - VERSION=1.21.10
+      - DIFFICULTY=hard
+      - MODE=survival
+      - FORCE_GAMEMODE=false
+      - HARDCORE=false
+      - PVP=true
+      - SERVER_NAME=NixOS
+      - MOTD=
+      - ICON=
+      - MAX_PLAYERS=50
+      - LEVEL=world
+      - MAX_WORLD_SIZE=
+      - SPAWN_PROTECTION=0
+      - MAX_BUILD_HEIGHT=256
+      - VIEW_DISTANCE=10
+      - ALLOW_NETHER=true
+      - GENERATE_STRUCTURES=true
+      - ANNOUNCE_PLAYER_ACHIEVEMENTS=false
+      - ENABLE_COMMAND_BLOCK=true
+      - SPAWN_ANIMALS=true
+      - SPAWN_MONSTERS=true
+      - SPAWN_NPCS=true
+      - OPS=
+      - ENABLE_WHITELIST=true
+      - WHITELIST=
+      - ONLINE_MODE=true
+      - ALLOW_FLIGHT=true
 volumes:
   data: null
