@@ -24,8 +24,11 @@
               size = "100%";
               content = {
                 type = "btrfs";
+                format = "btrfs";
+                subvolumes = {
+                  "/" = { mountpoint = "/"; }; # this creates the actual root FS ?
+                };
                 extraArgs = [ "-f" ]; # Override existing partition
-                mountpoint = "/";
                 mountOptions = [
                   "compress=zstd"
                   "noatime"
