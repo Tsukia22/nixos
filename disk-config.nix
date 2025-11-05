@@ -24,15 +24,15 @@
               size = "100%";
               content = {
                 type = "btrfs";
-                format = "btrfs";
-                subvolumes = {
-                  "/" = { mountpoint = "/"; }; # this creates the actual root FS ?
-                };
                 extraArgs = [ "-f" ]; # Override existing partition
-                mountOptions = [
-                  "compress=zstd"
-                  "noatime"
-                ];
+                # Subvolumes must set a mountpoint in order to be mounted,
+                # unless their parent is mounted
+                subvolumes = {
+                  # Subvolume name is different from mountpoint
+                  "/rootfs" = {
+                    mountpoint = "/";
+                  };
+                };
               };
             };
           };
