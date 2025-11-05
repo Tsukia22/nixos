@@ -2,7 +2,7 @@
   
   imports = 
     [ # Include the results of the hardware scan.
-      /etc/nixos/hardware-configuration.nix
+      #/etc/nixos/hardware-configuration.nix
       ./../../../modules/default.nix
       ./../../../modules/users/xanedithas.nix
       ./../../../modules/podman.nix
