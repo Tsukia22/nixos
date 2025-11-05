@@ -2,7 +2,6 @@
 
   imports =
     [
-      ./hardware-configuration.nix
       ./../../../modules/default.nix
       ./../../../modules/users/tsukia.nix
       ./../../../modules/podman.nix
