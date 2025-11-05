@@ -32,7 +32,7 @@
           inherit system;
           modules = [
             disko.nixosModules.disko
-            ./hardware-configuration.nix
+            ./hosts/server/xan01/hardware-configuration.nix
             ./hosts/server/xan01/configuration.nix
           ];
         };
