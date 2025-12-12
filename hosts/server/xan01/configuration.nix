@@ -12,7 +12,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  fileSystems."/".device = "/dev/disk/by-id/nvme-eui.0000000623090565caf25b038a001068/nixos";
+  #fileSystems."/".device = "/dev/disk/by-id/nvme-eui.0000000623090565caf25b038a001068/nixos";
 
   # Allow passwordless sudo as wheel
   security.sudo = {

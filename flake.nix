@@ -3,11 +3,9 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    disko.url = "github:nix-community/disko";
-    disko.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, disko }:
+  outputs = { self, nixpkgs }:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs { inherit system; };
@@ -31,7 +29,6 @@
         xan01 = nixpkgs.lib.nixosSystem {
           inherit system;
           modules = [
-            disko.nixosModules.disko
             ./hosts/server/xan01/hardware-configuration.nix
             ./hosts/server/xan01/configuration.nix
           ];
