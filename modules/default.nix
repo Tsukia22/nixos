@@ -51,11 +51,8 @@
     };
   };
 
-  # Backups (local)
-  services.borgmatic = {
-    enable = true;
-    configFile = "/home/kami/borgmatic-config.yml";
-  };
+  # Backups
+  services.borgmatic.enable = true;
 
   nix.extraOptions = ''
   experimental-features = nix-command flakes
