@@ -54,13 +54,12 @@
   # Backups (local)
   services.borgmatic = {
     enable = true;
-    user = "kami";
     settings = {
       location = {
         source_directories = [ "/home/kami/" ];
       };
       storage = {
-        repository = "/home/backup/";
+        repository = "/home/backup/kami";
         borg.create_repo = true;
       };
       retention = {
@@ -69,8 +68,8 @@
       };
       hooks = {
         before_backup = [
-          # stop all rootless containers for this user
-          "podman ps -q | xargs -r podman stop --time 30"
+          # stop all rootless Podman containers owned by kami
+          "sudo -u kami HOME=/home/kami bash -c 'cd /home/kami && podman ps -q | xargs -r podman stop --time 30'"
         ];
         after_backup = [
           # reboot after backup succeeds
