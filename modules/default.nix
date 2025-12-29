@@ -54,7 +54,7 @@
   # Backups (local)
   services.borgmatic = {
     enable = true;
-    configFile = "/home/kami/borgmatic-config.yml"
+    configFile = "/home/kami/borgmatic-config.yml";
   };
 
   nix.extraOptions = ''
