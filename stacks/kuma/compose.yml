@@ -1,6 +1,7 @@
 services:
   up:
     image: louislam/uptime-kuma:1
+    container_name: up
     restart: always
     volumes:
       - data:/app/data

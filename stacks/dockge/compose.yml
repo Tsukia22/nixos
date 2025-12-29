@@ -1,6 +1,7 @@
 services:
   dockge:
     image: docker.io/louislam/dockge:1
+    container_name: dockge
     restart: unless-stopped
     ports:
       # Host Port : Container Port
