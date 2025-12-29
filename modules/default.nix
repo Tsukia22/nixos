@@ -54,25 +54,7 @@
   # Backups (local)
   services.borgmatic = {
     enable = true;
-    settings = {
-      source_directories = [ "/home/kami/" ];
-      repository = "/home/backup/kami";
-      create_repo = true;
-      retention = {
-        keep_daily = 7;
-        keep_weekly = 4;
-      };
-      hooks = {
-        before_backup = [
-          # stop all rootless Podman containers owned by kami
-          "sudo -u kami HOME=/home/kami bash -c 'cd /home/kami && podman ps -q | xargs -r podman stop --time 30'"
-        ];
-        after_backup = [
-          # reboot after backup succeeds
-          "sudo /bin/systemctl reboot"
-        ];
-      };
-    };
+    configFile = "/home/kami/borgmatic-config.yml"
   };
 
   nix.extraOptions = ''
