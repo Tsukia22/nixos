@@ -55,13 +55,9 @@
   services.borgmatic = {
     enable = true;
     settings = {
-      location = {
-        source_directories = [ "/home/kami/" ];
-      };
-      storage = {
-        repository = "/home/backup/kami";
-        borg.create_repo = true;
-      };
+      source_directories = [ "/home/kami/" ];
+      repository = "/home/backup/kami";
+      create_repo = true;
       retention = {
         keep_daily = 7;
         keep_weekly = 4;
