@@ -51,6 +51,35 @@
     };
   };
 
+  # Backups (local)
+  services.borgmatic = {
+    enable = true;
+    user = "kami";
+    settings = {
+      location = {
+        source_directories = [ "/home/kami/" ];
+      };
+      storage = {
+        repository = "/home/backup/";
+        borg.create_repo = true;
+      };
+      retention = {
+        keep_daily = 7;
+        keep_weekly = 4;
+      };
+      hooks = {
+        before_backup = [
+          # stop all rootless containers for this user
+          "podman ps -q | xargs -r podman stop --time 30"
+        ];
+        after_backup = [
+          # reboot after backup succeeds
+          "sudo /bin/systemctl reboot"
+        ];
+      };
+    };
+  };
+
   nix.extraOptions = ''
   experimental-features = nix-command flakes
 '';
