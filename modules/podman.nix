@@ -17,30 +17,29 @@
     podman-compose
   ];
 
-  systemd.user.services.podman-restart = {
-    description = "Podman start containers with restart policy unless-stopped on boot";
-    documentation = [ "man:podman-start(1)" ];
-
+  systemd.services.podman-rootless-start = {
+    description = "Start unless-stopped podman containers at boot";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "network-online.target" ];
     wants = [ "network-online.target" ];
-    after  = [ "network-online.target" ];
 
     serviceConfig = {
       Type = "oneshot";
+      User = "kami";
+      WorkingDirectory = "/home/kami";
       RemainAfterExit = true;
-      Environment = "LOGGING=--log-level=info";
+
+      Environment = [
+        "HOME=/home/kami"
+        "XDG_RUNTIME_DIR=/run/user/${toString config.users.users.kami.uid}"
+      ];
 
       ExecStart =
-        "${pkgs.podman}/bin/podman $LOGGING start --all --filter restart-policy=unless-stopped";
+        "${pkgs.podman}/bin/podman start --all --filter restart-policy=unless-stopped";
 
       ExecStop =
-        "${pkgs.podman}/bin/podman $LOGGING stop --all --filter restart-policy=unless-stopped";
+        "${pkgs.podman}/bin/podman stop --all --filter restart-policy=unless-stopped";
     };
   };
 
-  /*
-    # To test without homemanager automation
-    systemctl --user daemon-reexec
-    systemctl --user enable podman-restart.service
-    systemctl --user start podman-restart.service
-  */
 }
