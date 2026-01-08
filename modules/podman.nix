@@ -17,28 +17,17 @@
     podman-compose
   ];
 
-  systemd.services.podman-rootless-start = {
-    description = "Start unless-stopped podman containers at boot";
+  # Automatically start containers on boot
+  systemd.services.podman-autostart = {
+    enable = true;
+    after = [ "podman.service" ];
     wantedBy = [ "multi-user.target" ];
-    after = [ "network-online.target" ];
-    wants = [ "network-online.target" ];
-
+    description = "Automatically start containers with --restart=unless-stopped tag";
     serviceConfig = {
-      Type = "oneshot";
+      Type = "idle";
       User = "kami";
-      WorkingDirectory = "/home/kami";
-      RemainAfterExit = true;
-
-      Environment = [
-        "HOME=/home/kami"
-        "XDG_RUNTIME_DIR=/run/user/${toString config.users.users.kami.uid}"
-      ];
-
-      ExecStart =
-        "${pkgs.podman}/bin/podman start --all --filter restart-policy=unless-stopped";
-
-      ExecStop =
-        "${pkgs.podman}/bin/podman stop --all --filter restart-policy=unless-stopped";
+      ExecStartPre = ''${pkgs.coreutils}/bin/sleep 1'';
+      ExecStart = ''/run/current-system/sw/bin/podman start --all --filter restart-policy=unless-stopped'';
     };
   };
 
