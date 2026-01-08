@@ -22,12 +22,12 @@
     enable = true;
     after = [ "podman.service" ];
     wantedBy = [ "multi-user.target" ];
-    description = "Automatically start containers with --restart=unless-stopped tag";
+    description = "Automatically start containers with --restart=always tag";
     serviceConfig = {
       Type = "idle";
       User = "kami";
       ExecStartPre = ''${pkgs.coreutils}/bin/sleep 1'';
-      ExecStart = ''/run/current-system/sw/bin/podman start --all --filter restart-policy=unless-stopped'';
+      ExecStart = ''/run/current-system/sw/bin/podman start --all --filter restart-policy=always'';
     };
   };
 
