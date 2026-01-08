@@ -35,10 +35,6 @@
       ExecStop =
         "${pkgs.podman}/bin/podman $LOGGING stop --all --filter restart-policy=unless-stopped";
     };
-
-    install = {
-      WantedBy = [ "default.target" ];
-    };
   };
 
   /*
