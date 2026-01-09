@@ -2,7 +2,7 @@ services:
   up:
     image: louislam/uptime-kuma:1
     container_name: up
-    restart: unless-stopped
+    restart: always
     volumes:
       - data:/app/data
     labels:

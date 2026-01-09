@@ -2,7 +2,7 @@ services:
   dockge:
     image: docker.io/louislam/dockge:1
     container_name: dockge
-    restart: unless-stopped
+    restart: always
     ports:
       # Host Port : Container Port
       - 25560:5001
