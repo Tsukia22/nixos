@@ -37,7 +37,7 @@
     wantedBy = [ "multi-user.target" ];
     description = "Automatically restart containers";
     serviceConfig = {
-      Type = "idle";
+      Type = "oneshot";
       User = "kami";
       StandardOutput = "file:/home/kami/podman-restart-service.log";
       ExecStartPre = "/bin/echo Restarting containers...";
