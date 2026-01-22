@@ -39,11 +39,12 @@
     serviceConfig = {
       Type = "idle";
       User = "kami";
-      StandardOutput = "file:/var/log/podman-restart-service.log";
-      StandardError  = "file:/var/log/podman-restart-service.log";
-      ExecStartPre = "/bin/echo 'Restarting containers...'";
-      ExecStart = ''xargs -r -n 1 podman restart < /home/kami/running'';
-      ExecStartPost = "/bin/echo 'Done restarting containers.'";
+      StandardOutput = "file:/home/kami/podman-restart-service.log";
+      ExecStartPre = "/bin/echo Restarting containers...";
+      ExecStart = ''
+        xargs -r -n 1 podman restart < /home/kami/running
+      '';
+      ExecStartPost = "/bin/echo Done restarting containers.";
     };
   };
 }
