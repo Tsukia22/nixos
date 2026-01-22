@@ -27,7 +27,7 @@
       Type = "idle";
       User = "kami";
       ExecStartPre = ''${pkgs.coreutils}/bin/sleep 1'';
-      ExecStart = ''/run/current-system/sw/bin/podman restart --all --filter should-start-on-boot=true'';
+      ExecStart = ''/run/current-system/sw/bin/podman restart --all --filter restart-policy=always'';
     };
   };
 }
