@@ -48,10 +48,10 @@
     };
   };
 
-  systemd.timers.podman-restart = {
+  systemd.timers.maintenance = {
     wantedBy = [ "timers.target" ];
     timerConfig = {
-      OnCalendar = "16:30";
+      OnCalendar = "16:32";
       Persistent = true;
     };
   };
