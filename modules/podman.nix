@@ -32,7 +32,6 @@
   # };
 
   systemd.services.podman-restart = {
-    enable = true;
     after = [ "podman.service" ];
     wantedBy = [ "multi-user.target" ];
     description = "Automatically restart containers";
@@ -53,13 +52,12 @@
   systemd.timers.maintenance = {
     wantedBy = [ "timers.target" ];
     timerConfig = {
-      OnCalendar = "23:11";
+      OnCalendar = "23:23";
       Persistent = true;
     };
   };
   
   systemd.services.maintenance = {
-    enable = true;
     after = [ "podman.service" ];
     description = "Maintenance";
     serviceConfig = {
@@ -71,12 +69,12 @@
       ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.podman}/bin/podman ps -q > /home/kami/running && ${pkgs.podman}/bin/podman stop --all --timeout 30'";
       ExecStartPost = "${pkgs.coreutils}/bin/echo Done running maintenace, rebooting...";
     };
+    unitConfig = {
+      OnSuccess = "reboot-after-maintenance.service";
+    };
   };
   
   systemd.services.reboot-after-maintenance = {
-    enable = true;
-    after = [ "maintenance.service" ];
-    wantedBy = [ "multi-user.target" ];
     description = "Reboot after maintenance";
     serviceConfig = {
       Type = "oneshot";
