@@ -17,17 +17,17 @@
     podman-compose
   ];
 
-  # # Automatically start containers on boot
-  # systemd.services.podman-autostart = {
-  #   enable = true;
-  #   after = [ "podman.service" ];
-  #   wantedBy = [ "multi-user.target" ];
-  #   description = "Automatically start containers with --restart=always tag";
-  #   serviceConfig = {
-  #     Type = "idle";
-  #     User = "kami";
-  #     ExecStartPre = ''${pkgs.coreutils}/bin/sleep 1'';
-  #     ExecStart = ''/run/current-system/sw/bin/podman start --all --filter restart-policy=always'';
-  #   };
-  # };
+  # Automatically start containers should-start-on-boot
+  systemd.services.podman-autostart = {
+    enable = true;
+    after = [ "podman.service" ];
+    wantedBy = [ "multi-user.target" ];
+    description = "Automatically start containers should-start-on-boot";
+    serviceConfig = {
+      Type = "idle";
+      User = "kami";
+      ExecStartPre = ''${pkgs.coreutils}/bin/sleep 1'';
+      ExecStart = ''/run/current-system/sw/bin/podman restart --all --filter should-start-on-boot=true'';
+    };
+  };
 }
