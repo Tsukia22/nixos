@@ -53,7 +53,7 @@
   systemd.timers.maintenance = {
     wantedBy = [ "timers.target" ];
     timerConfig = {
-      OnCalendar = "23:08";
+      OnCalendar = "23:11";
       Persistent = true;
     };
   };
@@ -76,6 +76,7 @@
   systemd.services.reboot-after-maintenance = {
     enable = true;
     after = [ "maintenance.service" ];
+    wantedBy = [ "multi-user.target" ];
     description = "Reboot after maintenance";
     serviceConfig = {
       Type = "oneshot";
