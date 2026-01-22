@@ -42,7 +42,7 @@
       StandardOutput = "file:/home/kami/podman-restart-service.log";
       ExecStartPre = "/bin/echo Restarting containers...";
       ExecStart = ''
-        xargs -r -n 1 podman restart < /home/kami/running
+        ${pkgs.findutils}/bin/xargs -r -n 1 ${pkgs.podman}/bin/podman restart < /home/kami/running
       '';
       ExecStartPost = "/bin/echo Done restarting containers.";
     };
