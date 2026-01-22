@@ -52,7 +52,7 @@
   systemd.timers.maintenance = {
     wantedBy = [ "timers.target" ];
     timerConfig = {
-      OnCalendar = "23:23";
+      OnCalendar = "03:30";
       Persistent = true;
     };
   };
@@ -67,7 +67,7 @@
       StandardError = "file:/home/kami/maintenance-service.log";
       ExecStartPre = "${pkgs.coreutils}/bin/echo Starting maintenance...";
       ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.podman}/bin/podman ps -q > /home/kami/running && ${pkgs.podman}/bin/podman stop --all --timeout 30'";
-      ExecStartPost = "${pkgs.coreutils}/bin/echo Done running maintenace, rebooting...";
+      ExecStartPost = "${pkgs.coreutils}/bin/echo Done running maintenance.";
     };
     unitConfig = {
       OnSuccess = "reboot-after-maintenance.service";
@@ -78,6 +78,7 @@
     description = "Reboot after maintenance";
     serviceConfig = {
       Type = "oneshot";
+      ExecStartPre = "${pkgs.coreutils}/bin/echo Rebooting...";
       ExecStart = "${pkgs.bash}/bin/bash -c 'reboot'";
     };
   };
