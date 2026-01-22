@@ -38,6 +38,7 @@
     description = "Automatically restart containers";
     serviceConfig = {
       Type = "oneshot";
+      RemainAfterExit = true;  # Service stays "active" after running once
       User = "kami";
       StandardOutput = "file:/home/kami/podman-restart-service.log";
       StandardError = "file:/home/kami/podman-restart-service.log";
