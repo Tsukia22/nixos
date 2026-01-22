@@ -40,11 +40,11 @@
       Type = "oneshot";
       User = "kami";
       StandardOutput = "file:/home/kami/podman-restart-service.log";
-      ExecStartPre = "/bin/echo Restarting containers...";
+      ExecStartPre = "${pkgs.coreutils}/bin/echo Restarting containers...";
       ExecStart = ''
         ${pkgs.findutils}/bin/xargs -r -n 1 ${pkgs.podman}/bin/podman restart < /home/kami/running
       '';
-      ExecStartPost = "/bin/echo Done restarting containers.";
+      ExecStartPost = "${pkgs.coreutils}/bin/echo Done restarting containers.";
     };
   };
 }
