@@ -51,7 +51,7 @@
   systemd.timers.maintenance = {
     wantedBy = [ "timers.target" ];
     timerConfig = {
-      OnCalendar = "16:32";
+      OnCalendar = "16:38";
       Persistent = true;
     };
   };
@@ -59,15 +59,15 @@
   systemd.services.maintenance = {
     enable = true;
     after = [ "podman.service" ];
-    description = "Automatically restart containers";
+    description = "Maintenance";
     serviceConfig = {
       Type = "oneshot";
       User = "kami";
       StandardOutput = "file:/home/kami/maintenance-service.log";
       ExecStartPre = "${pkgs.coreutils}/bin/echo Starting maintenance...";
       ExecStart = ''
-        ${pkgs.podman}/bin/podman ps -q > /home/kami/running
-        ${pkgs.findutils}/bin/xargs -r -n 1 ${pkgs.podman}/bin/podman stop --timeout 30 < /home/kami/running
+        ${pkgs.bash}/bin/bash -c '${pkgs.podman}/bin/podman ps -q > /home/kami/running'
+        ${pkgs.podman}/bin/podman stop --all --timeout 30
       '';
       ExecStartPost = "${pkgs.coreutils}/bin/echo Done running maintenace, rebooting...";
     };
