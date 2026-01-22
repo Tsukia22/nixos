@@ -47,4 +47,29 @@
       ExecStartPost = "${pkgs.coreutils}/bin/echo Done restarting containers.";
     };
   };
+
+  systemd.timers.podman-restart = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "16:30";
+      Persistent = true;
+    };
+  };
+  
+  systemd.services.maintenance = {
+    enable = true;
+    after = [ "podman.service" ];
+    description = "Automatically restart containers";
+    serviceConfig = {
+      Type = "oneshot";
+      User = "kami";
+      StandardOutput = "file:/home/kami/maintenance-service.log";
+      ExecStartPre = "${pkgs.coreutils}/bin/echo Starting maintenance...";
+      ExecStart = ''
+        ${pkgs.podman}/bin/podman ps -q > /home/kami/running
+        ${pkgs.findutils}/bin/xargs -r -n 1 ${pkgs.podman}/bin/podman stop --timeout 30 < /home/kami/running
+      '';
+      ExecStartPost = "${pkgs.coreutils}/bin/echo Done running maintenace, rebooting...";
+    };
+  };
 }
