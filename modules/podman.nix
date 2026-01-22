@@ -53,7 +53,7 @@
   systemd.timers.maintenance = {
     wantedBy = [ "timers.target" ];
     timerConfig = {
-      OnCalendar = "23:01";
+      OnCalendar = "23:08";
       Persistent = true;
     };
   };
@@ -70,6 +70,16 @@
       ExecStartPre = "${pkgs.coreutils}/bin/echo Starting maintenance...";
       ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.podman}/bin/podman ps -q > /home/kami/running && ${pkgs.podman}/bin/podman stop --all --timeout 30'";
       ExecStartPost = "${pkgs.coreutils}/bin/echo Done running maintenace, rebooting...";
+    };
+  };
+  
+  systemd.services.reboot-after-maintenance = {
+    enable = true;
+    after = [ "maintenance.service" ];
+    description = "Reboot after maintenance";
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.bash}/bin/bash -c 'reboot'";
     };
   };
 }
