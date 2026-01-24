@@ -9,6 +9,10 @@
       ./../../../modules/podman.nix
     ];
 
+  # Bootloader
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
   # Networking
   networking.hostName = "tsu01";
   boot.kernel.sysctl."net.ipv4.ip_unprivileged_port_start" = 80;
