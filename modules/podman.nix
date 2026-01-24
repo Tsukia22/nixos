@@ -15,6 +15,7 @@
 
   environment.systemPackages = with pkgs; [
     podman-compose
+    borgbackup
   ];
 
   # # Automatically start containers should-start-on-boot
