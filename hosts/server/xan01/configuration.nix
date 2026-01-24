@@ -5,6 +5,7 @@
       /etc/nixos/hardware-configuration.nix
       ./../../../modules/default.nix
       ./../../../modules/users/xanedithas.nix
+      ./../../../modules/users/tsu01.nix
       ./../../../modules/podman.nix
     ];
 

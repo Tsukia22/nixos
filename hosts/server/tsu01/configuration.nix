@@ -5,6 +5,7 @@
       ./hardware-configuration.nix
       ./../../../modules/default.nix
       ./../../../modules/users/tsukia.nix
+      ./../../../modules/users/xan01.nix
       ./../../../modules/podman.nix
     ];
 
@@ -24,6 +25,5 @@
     ports = [ 1993 ];
   };
 
-  system.stateVersion = "25.05"; 
-
+  system.stateVersion = "25.05";
 }
