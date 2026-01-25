@@ -5,7 +5,7 @@
     description = "kami";
     extraGroups = [ "docker" "podman" ];
     linger = true;
-    uid = 2000;
+    uid = 1000;
   };
 
   virtualisation.containers.enable = true;
