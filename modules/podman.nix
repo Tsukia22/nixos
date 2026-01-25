@@ -6,6 +6,12 @@
     extraGroups = [ "docker" "podman" ];
     linger = true;
     uid = 2000;
+    subUidRanges = [
+      { startUid = 100000; count = 65536; }
+    ];
+    subGidRanges = [
+      { startGid = 100000; count = 65536; }
+    ];
   };
 
   virtualisation.containers.enable = true;
