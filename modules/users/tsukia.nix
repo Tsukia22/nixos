@@ -13,7 +13,7 @@
   # sudo  
   security.sudo.extraRules = [
     {
-      users = [ "tsukia" ];
+      users = [ "tsukia" "xanedithas" ];
       commands = [
         {
           command = "ALL";
