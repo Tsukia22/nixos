@@ -2,7 +2,8 @@
 
   imports =
     [
-      ./hardware-configuration.nix
+      #./hardware-configuration.nix
+      /etc/nixos/hardware-configuration.nix
       ./../../../modules/default.nix
       ./../../../modules/users/tsukia.nix
       ./../../../modules/users/xanedithas.nix
