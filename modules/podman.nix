@@ -46,8 +46,8 @@
       Type = "oneshot";
       RemainAfterExit = true;  # Service stays "active" after running once
       User = "kami";
-      StandardOutput = "file:/home/kami/podman-restart-service.log";
-      StandardError = "file:/home/kami/podman-restart-service.log";
+      StandardOutput = "append:/home/kami/podman-restart-service.log";
+      StandardError = "append:/home/kami/podman-restart-service.log";
       ExecStartPre = "${pkgs.coreutils}/bin/echo Restarting containers...";
       ExecStart = ''
         ${pkgs.findutils}/bin/xargs -r -n 1 ${pkgs.podman}/bin/podman restart < /home/kami/running
@@ -70,8 +70,8 @@
     serviceConfig = {
       Type = "oneshot";
       User = "kami";
-      StandardOutput = "file:/home/kami/maintenance-service.log";
-      StandardError = "file:/home/kami/maintenance-service.log";
+      StandardOutput = "append:/home/kami/maintenance-service.log";
+      StandardError = "append:/home/kami/maintenance-service.log";
       ExecStartPre = "${pkgs.coreutils}/bin/echo Starting maintenance...";
       ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.podman}/bin/podman ps -q > /home/kami/running && ${pkgs.podman}/bin/podman stop --all --timeout 30'";
       ExecStartPost = "${pkgs.coreutils}/bin/echo Done running maintenance.";
