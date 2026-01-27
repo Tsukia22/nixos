@@ -73,7 +73,7 @@
       StandardOutput = "append:/home/kami/maintenance-service.log";
       StandardError = "append:/home/kami/maintenance-service.log";
       ExecStartPre = "${pkgs.coreutils}/bin/echo Starting maintenance...";
-      ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.podman}/bin/podman ps -q > /home/kami/running && ${pkgs.podman}/bin/podman stop --all --timeout 30'";
+      ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.podman}/bin/podman ps -q > /home/kami/running && ${pkgs.podman}/bin/podman stop --all --timeout 60'";
       ExecStartPost = "${pkgs.coreutils}/bin/echo Done running maintenance.";
     };
     unitConfig = {
