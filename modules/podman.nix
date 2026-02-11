@@ -65,7 +65,6 @@
   };
   
   systemd.services.maintenance = {
-    after = [ "podman.service" ];
     description = "Maintenance";
     serviceConfig = {
       Type = "oneshot";
@@ -76,6 +75,33 @@
       ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.podman}/bin/podman ps -q > /home/kami/running && ${pkgs.podman}/bin/podman stop --all --timeout 60'";
       ExecStartPost = "${pkgs.coreutils}/bin/echo Done running maintenance.";
     };
+    unitConfig = {
+      OnSuccess = "auto-update.service";
+    };
+  };
+
+  systemd.services.auto-update = {
+    after = [ "maintenance.service" ];
+    description = "NixOS Flake auto update";
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+      WorkingDirectory = "/root/nixos";
+      StandardOutput = "append:/root/update-service.log";
+      StandardError = "append:/root/update-service.log";
+      ExecStart = pkgs.writeShellScript "nixos-update" ''
+        set -eu
+        
+        echo "Updating flake inputs..."
+        ${pkgs.nix}/bin/nix flake update --flake /root/nixos
+        
+        echo "Rebuilding for next boot..."
+        ${pkgs.nixos-rebuild}/bin/nixos-rebuild boot --impure --flake /root/nixos#xan01
+        
+        echo "Update complete. Changes will apply on next reboot."
+      '';
+    };
+    
     unitConfig = {
       OnSuccess = "reboot-after-maintenance.service";
     };
