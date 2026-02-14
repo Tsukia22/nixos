@@ -83,6 +83,7 @@
   systemd.services.auto-update = {
     after = [ "maintenance.service" ];
     description = "NixOS Flake auto update";
+    path = [ pkgs.git pkgs.nix pkgs.nixos-rebuild ];
     serviceConfig = {
       Type = "oneshot";
       User = "root";
