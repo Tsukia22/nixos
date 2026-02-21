@@ -97,7 +97,7 @@
         ${pkgs.nix}/bin/nix flake update --flake /root/nixos
         
         echo "Rebuilding for next boot..."
-        ${pkgs.nixos-rebuild}/bin/nixos-rebuild boot --impure --flake /root/nixos#xan01
+        ${pkgs.nixos-rebuild}/bin/nixos-rebuild boot --impure --flake /root/nixos#$(hostname)
         
         echo "Update complete. Changes will apply on next reboot."
       '';
