@@ -6,6 +6,7 @@
       ./../../../modules/default.nix
       ./../../../modules/users/xanedithas.nix
       ./../../../modules/users/tsu01.nix
+      ./../../../modules/users/dev.nix
       ./../../../modules/podman.nix
     ];
 
