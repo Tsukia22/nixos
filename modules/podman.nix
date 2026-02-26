@@ -6,6 +6,7 @@
     extraGroups = [ "docker" "podman" ];
     linger = true;
     uid = 2000;
+    autoSubUidGidRange = false;
     subUidRanges = [
       { startUid = 100000; count = 65536; }
     ];
