@@ -9,7 +9,16 @@
       ./../../../modules/users/xanedithas.nix
       ./../../../modules/users/xan01.nix
       ./../../../modules/podman.nix
+      ./../../../modules/services.nix
     ];
+
+  systemd.timers.maintenance = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "04:30";
+      Persistent = true;
+    };
+  };
 
   # Bootloader
   boot.loader.systemd-boot.enable = true;
