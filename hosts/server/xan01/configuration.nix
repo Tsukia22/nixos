@@ -8,7 +8,16 @@
       ./../../../modules/users/tsu01.nix
       ./../../../modules/users/dev.nix
       ./../../../modules/podman.nix
+      ./../../../modules/services.nix
     ];
+
+  systemd.timers.maintenance = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "16:05";
+      Persistent = true;
+    };
+  };
 
   # Bootloader
   boot.loader.systemd-boot.enable = true;
