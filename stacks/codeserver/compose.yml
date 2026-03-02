@@ -12,9 +12,12 @@ services:
       - workspace:/home/workspace
       # Persist user installations and config
       - home:/home/openvscode-server
-    #labels:
-    #  - traefik.enable=true
-    #  - traefik.http.services.code.loadbalancer.server.port=3000
+      # Copy podman and compose from the host
+      - /nix/store:/nix/store:ro
+      - /run/current-system/sw/bin/podman:/usr/local/bin/podman
+      - /run/current-system/sw/bin/podman-compose:/usr/local/bin/podman-compose
+      # Host socket
+      - /var/run/user/2001/podman/podman.sock:/var/run/user/1000/podman/podman.sock
 volumes:
   workspace: null
   home: null
