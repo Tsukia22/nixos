@@ -7,8 +7,25 @@
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGY2K6YGEJZ5zh24e2rr+lOk/IXEo7DQ08bHnohGvI/s xanedithas"
     ];
-    packages = with pkgs; [
-      tree
-    ];
   };
+  security.sudo.extraRules = [
+    {
+      users = [ "xanedithas" ];
+      commands = [
+        {
+          command = "ALL";
+          options = [ "NOPASSWD" ];
+        }
+      ];
+    }
+    {
+      users = [ "tsu01" ];
+      commands = [
+        {
+          command = "/run/current-system/sw/bin/btrfs receive *";
+          options = [ "NOPASSWD" ];
+        }
+      ];
+    }
+  ];
 }
