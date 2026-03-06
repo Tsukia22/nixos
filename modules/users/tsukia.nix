@@ -25,6 +25,10 @@
           command = "/run/current-system/sw/bin/btrfs receive *";
           options = [ "NOPASSWD" ];
         }
+        {
+          command = "/run/current-system/sw/bin/btrfs send *";
+          options = [ "NOPASSWD" ];
+        }
       ];
     }
   ];
