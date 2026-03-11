@@ -84,5 +84,23 @@
       ExecStart = "${pkgs.bash}/bin/bash -c 'reboot'";
     };
   };
+  
+  systemd.services.manual-shutdown = {
+    description = "Manual shutdown for unplanned maintenance";
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = pkgs.writeShellScript "manual-shutdown" ''
+        set -eu
+        
+        echo "Manual shutdown!"
+        
+        cd /home/kami
+        sudo -u kami podman ps -q > /home/kami/running
+        sudo -u kami podman stop --all --timeout 60
+
+        shutdown
+      '';
+    };
+  };
 
 }
