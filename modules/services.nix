@@ -72,7 +72,7 @@
     };
     
     unitConfig = {
-      OnSuccess = "reboot-after-maintenance.service";
+      OnSuccess = "auto-backup.service"; # In the host configuration
     };
   };
   
