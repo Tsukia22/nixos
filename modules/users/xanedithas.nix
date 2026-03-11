@@ -19,7 +19,7 @@
       ];
     }
     {
-      users = [ "tsu01" ];
+      users = [ "tsu01" "xan01" ];
       commands = [
         {
           command = "/run/current-system/sw/bin/btrfs receive *";
