@@ -30,6 +30,11 @@
           inherit system;
           modules = [ ./hosts/server/xan01/configuration.nix ];
         };
+
+        xan02 = nixpkgs.lib.nixosSystem {
+          inherit system;
+          modules = [ ./hosts/server/xan02/configuration.nix ];
+        };
         
         tsuacer = nixpkgs.lib.nixosSystem {
           inherit system;
