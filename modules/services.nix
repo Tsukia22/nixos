@@ -96,9 +96,9 @@
         
         cd /home/kami
         ${pkgs.util-linux}/bin/runuser -l kami -c 'podman ps -q > /home/kami/running'
-        ${pkgs.util-linux}/bin/runuser -l kami -c 'podman stop --all --timeout 60'
+        ${pkgs.util-linux}/bin/runuser -l kami -c 'podman stop --all --timeout 20'
 
-        shutdown
+        shutdown now
       '';
     };
   };
