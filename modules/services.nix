@@ -95,8 +95,8 @@
         echo "Manual shutdown!"
         
         cd /home/kami
-        ${pkgs.findutils}/bin/su -l kami -c 'podman ps -q > /home/kami/running'
-        ${pkgs.findutils}/bin/su -l kami -c 'podman stop --all --timeout 60'
+        ${pkgs.util-linux}/bin/su -l kami -c 'podman ps -q > /home/kami/running'
+        ${pkgs.util-linux}/bin/su -l kami -c 'podman stop --all --timeout 60'
 
         shutdown
       '';
