@@ -95,8 +95,8 @@
         echo "Manual shutdown!"
         
         cd /home/kami
-        sudo -u kami podman ps -q > /home/kami/running
-        sudo -u kami podman stop --all --timeout 60
+        /run/wrappers/bin/sudo -u kami podman ps -q > /home/kami/running
+        /run/wrappers/bin/sudo -u kami podman stop --all --timeout 60
 
         shutdown
       '';
