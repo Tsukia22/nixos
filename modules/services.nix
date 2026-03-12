@@ -93,11 +93,17 @@
   
   systemd.services.reboot-after-maintenance = {
     description = "Reboot after maintenance";
-    path = [ pkgs.coreutils pkgs.bash ];
+    path = [ pkgs.coreutils ];
     serviceConfig = {
       Type = "oneshot";
-      ExecStartPre = "echo Rebooting...";
-      ExecStart = "bash -c 'reboot'";
+      ExecStart = pkgs.writeShellScript "reboot-after-maintenance" ''
+        set -eu
+
+        echo $(date +"%Y-%m-%d %H:%M:%S")
+        echo "Rebooting..."
+        
+        reboot
+      '';
     };
   };
   
