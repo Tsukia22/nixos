@@ -18,30 +18,44 @@
     after = [ "podman.service" ];
     wantedBy = [ "multi-user.target" ];
     description = "Automatically restart containers";
+    path = [ pkgs.coreutils pkgs.findutils pkgs.podman ];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;  # Service stays "active" after running once
       User = "kami";
       StandardOutput = "append:/home/kami/podman-restart-service.log";
       StandardError = "append:/home/kami/podman-restart-service.log";
-      ExecStartPre = "${pkgs.coreutils}/bin/echo Restarting containers...";
-      ExecStart = ''
-        ${pkgs.findutils}/bin/xargs -r -n 1 ${pkgs.podman}/bin/podman restart < /home/kami/running
+      ExecStart = pkgs.writeShellScript "podman-restart" ''
+        set -eu
+        
+        echo $(date +"%Y-%m-%d %H:%M:%S")
+        echo "Starting containers..."
+        
+        xargs -r -n 1 podman restart < /home/kami/running
+        
+        echo "Done starting containers."
       '';
-      ExecStartPost = "${pkgs.coreutils}/bin/echo Done restarting containers.";
     };
   };
   
   systemd.services.maintenance = {
     description = "Maintenance";
+    path = [ pkgs.coreutils pkgs.bash pkgs.podman ];
     serviceConfig = {
       Type = "oneshot";
       User = "kami";
       StandardOutput = "append:/home/kami/maintenance-service.log";
       StandardError = "append:/home/kami/maintenance-service.log";
-      ExecStartPre = "${pkgs.coreutils}/bin/echo Starting maintenance...";
-      ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.podman}/bin/podman ps -q > /home/kami/running && ${pkgs.podman}/bin/podman stop --all --timeout 60'";
-      ExecStartPost = "${pkgs.coreutils}/bin/echo Done running maintenance.";
+      ExecStart = pkgs.writeShellScript "maintenance" ''
+        set -eu
+        
+        echo $(date +"%Y-%m-%d %H:%M:%S")
+        echo "Starting maintenance..."
+        
+        bash -c 'podman ps -q > /home/kami/running && podman stop --all --timeout 60'
+        
+        echo "Done running maintenance."
+      '';
     };
     unitConfig = {
       OnSuccess = "auto-update.service";
@@ -61,13 +75,14 @@
       ExecStart = pkgs.writeShellScript "nixos-update" ''
         set -eu
         
+        echo $(date +"%Y-%m-%d %H:%M:%S")
         echo "Updating flake inputs..."
-        ${pkgs.nix}/bin/nix flake update --flake /root/nixos
+        nix flake update --flake /root/nixos
         
         echo "Rebuilding for next boot..."
-        ${pkgs.nixos-rebuild}/bin/nixos-rebuild boot --impure --flake /root/nixos#$(hostname)
+        nixos-rebuild boot --impure --flake /root/nixos#$(hostname)
         
-        echo "Update complete. Changes will apply on next reboot."
+        echo "Update complete. Changes will apply on boot."
       '';
     };
     
@@ -78,25 +93,28 @@
   
   systemd.services.reboot-after-maintenance = {
     description = "Reboot after maintenance";
+    path = [ pkgs.coreutils pkgs.bash ];
     serviceConfig = {
       Type = "oneshot";
-      ExecStartPre = "${pkgs.coreutils}/bin/echo Rebooting...";
-      ExecStart = "${pkgs.bash}/bin/bash -c 'reboot'";
+      ExecStartPre = "echo Rebooting...";
+      ExecStart = "bash -c 'reboot'";
     };
   };
   
   systemd.services.manual-shutdown = {
     description = "Manual shutdown for unplanned maintenance";
+    path = [ pkgs.util-linux ];
     serviceConfig = {
       Type = "oneshot";
       ExecStart = pkgs.writeShellScript "manual-shutdown" ''
         set -eu
-        
+
+        echo $(date +"%Y-%m-%d %H:%M:%S")
         echo "Manual shutdown!"
         
         cd /home/kami
-        ${pkgs.util-linux}/bin/runuser -l kami -c 'podman ps -q > /home/kami/running'
-        ${pkgs.util-linux}/bin/runuser -l kami -c 'podman stop --all --timeout 20'
+        runuser -l kami -c 'podman ps -q > /home/kami/running'
+        runuser -l kami -c 'podman stop --all --timeout 20'
 
         shutdown now
       '';
