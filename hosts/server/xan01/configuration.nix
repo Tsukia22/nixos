@@ -32,6 +32,7 @@
       ExecStart = pkgs.writeShellScript "nixos-backup" ''
         set -eu
         
+        echo $(date +"%Y-%m-%d %H:%M:%S")
         echo "Backing up volumes..."
 
         btrfs subvolume snapshot -r /home/kami/.local/share/containers/storage/volumes /var/snapshots/volumes-$(date +%Y%m%d)
@@ -48,7 +49,7 @@
     };
     
     unitConfig = {
-      #OnSuccess = "reboot-after-maintenance.service";
+      OnSuccess = "reboot-after-maintenance.service";
     };
   };
 
