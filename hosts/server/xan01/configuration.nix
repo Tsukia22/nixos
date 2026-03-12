@@ -22,7 +22,7 @@
   systemd.services.auto-backup = {
     after = [ "auto-update.service" ];
     description = "NixOS Flake auto backup";
-    path = [ pkgs.nix ];
+    path = [ pkgs.btrfs-progs ];
     serviceConfig = {
       Type = "oneshot";
       User = "root";
@@ -34,21 +34,21 @@
         
         echo "Backing up volumes..."
 
-        btrfs subvolume snapshot -r /home/kami/.local/share/containers/storage/volumes /var/snapshots/volumes-$(date +%Y%m%d)
+        ${pkgs.btrfs-progs}/bin/btrfs subvolume snapshot -r /home/kami/.local/share/containers/storage/volumes /var/snapshots/volumes-$(date +%Y%m%d)
 
         PREV=$(ls /var/snapshots/ | sort | tail -2 | head -1)
         CURR=$(ls /var/snapshots/ | sort | tail -1)
 
         echo "$PREV -> $CURR"
 
-        btrfs send -p /var/snapshots/$PREV /var/snapshots/$CURR | ssh xan01@192.168.0.109 -p 1993 "sudo btrfs receive ~/backups/"
+        ${pkgs.btrfs-progs}/bin/btrfs send -p /var/snapshots/$PREV /var/snapshots/$CURR | ssh xan01@192.168.0.109 -p 1993 "sudo btrfs receive ~/backups/"
 
         echo "Backup complete."
       '';
     };
     
     unitConfig = {
-      OnSuccess = "reboot-after-maintenance.service";
+      #OnSuccess = "reboot-after-maintenance.service";
     };
   };
 
