@@ -52,7 +52,9 @@
 
   # Networking
   networking.hostName = "xan02";
-  
+  networking.firewall.allowedTCPPortRanges = [
+    { from = 25550; to = 25559; } # local use
+  ];
   services.openssh = {
     enable = true;
     ports = [ 1993 ];
