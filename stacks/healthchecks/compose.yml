@@ -1,0 +1,31 @@
+services:
+  health:
+    image: healthchecks/healthchecks:latest
+    container_name: health
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - db
+    ports:
+      - 25562:8000
+    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; uwsgi
+      /opt/healthchecks/docker/uwsgi.ini'
+    networks:
+      - default
+      - shared
+  db:
+    image: postgres:16
+    container_name: health-db
+    volumes:
+      - data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    networks:
+      - default
+      - shared
+volumes:
+  data: null
+networks:
+  shared:
+    external: true
