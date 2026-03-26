@@ -42,7 +42,7 @@
 
         echo "$PREV -> $CURR"
 
-        btrfs send -p /var/snapshots/$PREV /var/snapshots/$CURR | ssh xan01@192.168.0.109 -p 1993 "sudo btrfs receive ~/backups/"
+        btrfs send -p /var/snapshots/$PREV /var/snapshots/$CURR | ssh xan01@192.168.0.54 -p 1993 "sudo btrfs receive ~/backups/"
 
         echo "Backup complete."
       '';
