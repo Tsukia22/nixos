@@ -48,6 +48,7 @@
   networking.firewall = {
     enable = true;
     allowedUDPPorts = [ 51820 ];
+    trustedInterfaces = [ "wg0" ];
 
     # This is required for the FORWARD iptables rule above to work.
     # NixOS's firewall drops forwarded packets by default.
