@@ -126,5 +126,25 @@
       '';
     };
   };
+  
+  systemd.services.manual-reboot = {
+    description = "Manual reboot for unplanned maintenance";
+    path = [ pkgs.util-linux ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = pkgs.writeShellScript "manual-reboot" ''
+        set -eu
+
+        echo $(date +"%Y-%m-%d %H:%M:%S")
+        echo "Manual reboot!"
+        
+        cd /home/kami
+        runuser -l kami -c 'podman ps -q > /home/kami/running'
+        runuser -l kami -c 'podman stop --all --timeout 20'
+
+        shutdown -r now
+      '';
+    };
+  };
 
 }
