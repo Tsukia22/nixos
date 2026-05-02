@@ -2,7 +2,7 @@
 
   boot.kernelModules = [ "wireguard" ];
 
-  networking.wg-quick.interfaces.wg0.configFile = "/root/wireguard/wg0.conf";
+  networking.wireguard.interfaces.wg0.configFile = "/root/wireguard/wg0.conf";
 
   networking.firewall = {
     enable = true;
