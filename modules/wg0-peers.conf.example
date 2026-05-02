@@ -1,0 +1,7 @@
+[Peer]
+PublicKey = REPLACE_ME
+AllowedIPs = 10.100.0.2/32
+
+[Peer]
+PublicKey = REPLACE_ME
+AllowedIPs = 10.100.0.3/32
