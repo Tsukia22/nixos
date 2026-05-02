@@ -103,14 +103,8 @@
   };
 
   # Wireguard config
-  networking.wg-quick.interfaces.wg-mesh = {
-    address = [ "10.100.0.2/32" ];
-    listenPort = 51821;
-  };
-  networking.wg-quick.interfaces.wg-net = {
-    address = [ "10.200.0.2/32" ];
-    listenPort = 51822;
-  };
+  networking.wg-quick.interfaces.wg-mesh.address = [ "10.100.0.2/32" ];
+  networking.wg-quick.interfaces.wg-net.address = [ "10.200.0.2/32" ];
 
   system.stateVersion = "25.05";
 }
