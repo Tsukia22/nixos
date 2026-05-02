@@ -65,6 +65,16 @@
     openFirewall = true;
   };
 
+  # DNS for wg-net
+  services.dnsmasq.settings = {
+    interface = "wg-net";
+    bind-interfaces = true;
+    no-log-queries = true;
+    no-resolv = true;
+    server = [ "9.9.9.9" "149.112.112.112" ]; # Quad9
+    conf-file = "/root/wireguard/dnsmasq.conf";
+  };
+
   # Bootloader
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -91,6 +101,10 @@
     enable = true;
     ports = [ 1993 ];
   };
+
+  # Wireguard config
+  networking.wg-quick.interfaces.wg-mesh.address = [ "10.100.0.2/32" ];
+  networking.wg-quick.interfaces.wg-net.address = [ "10.200.0.2/32" ];
 
   system.stateVersion = "25.05";
 }
