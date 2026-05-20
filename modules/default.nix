@@ -50,6 +50,13 @@
       overalljails = true;
     };
   };
+  
+  # Cleanup
+  nix.gc = {
+    automatic = true;
+    dates = "05:00";
+    options = "--delete-older-than 30d";
+  };
 
   nix.extraOptions = ''
   experimental-features = nix-command flakes
