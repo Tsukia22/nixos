@@ -9,7 +9,8 @@
       ./../../../modules/users/dev.nix
       ./../../../modules/podman.nix
       ./../../../modules/services.nix
-      ./../../../modules/wireguard.nix
+      ./../../../modules/wg-mesh.nix
+      ./../../../modules/wg-net.nix
     ];
 
   systemd.timers.maintenance = {

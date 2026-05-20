@@ -1,18 +1,5 @@
 { config, pkgs, ... }: {
-
-  # Mesh for peer-peer backhaul
-  # IP is set at the host config
-  networking.wg-quick.interfaces.wg-mesh = {
-    listenPort = 51821;
-    privateKeyFile = "/root/wireguard/wg-mesh-private.key";
-    postUp = [
-      "wg addconf wg-mesh /root/wireguard/wg-mesh-peers.conf"
-      "iptables -A FORWARD -i wg-mesh -j ACCEPT"
-    ];
-    preDown = [
-      "iptables -D FORWARD -i wg-mesh -j ACCEPT"
-    ];
-  };
+  
   # Network for clients hub-spoke (behind NAT)
   # IP is set at the host config
   networking.wg-quick.interfaces.wg-net = {
@@ -31,11 +18,9 @@
 
   networking.firewall = {
     enable = true;
-    allowedUDPPorts = [ 51821 51822 ];
-    trustedInterfaces = [ "wg-mesh wg-net" ];
+    allowedUDPPorts = [ 51822 ];
+    trustedInterfaces = [ "wg-net" ];
     extraCommands = ''
-      iptables -A FORWARD -i wg-mesh -j ACCEPT
-      iptables -A FORWARD -o wg-mesh -j ACCEPT
       iptables -A FORWARD -i wg-net -j ACCEPT
       iptables -A FORWARD -o wg-net -j ACCEPT
     '';

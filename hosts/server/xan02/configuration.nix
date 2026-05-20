@@ -8,6 +8,7 @@
       ./../../../modules/users/xan01.nix
       ./../../../modules/podman.nix
       ./../../../modules/services.nix
+      ./../../../modules/wg-mesh.nix
     ];
 
   systemd.timers.maintenance = {
@@ -59,6 +60,9 @@
     enable = true;
     ports = [ 1993 ];
   };
+
+  # Wireguard config
+  networking.wg-quick.interfaces.wg-mesh.address = [ "10.100.0.2/24" ];
 
   system.stateVersion = "25.11";
 }
