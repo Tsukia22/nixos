@@ -1,16 +1,20 @@
 { config, pkgs, ... }:{
 
-  imports =
-    [
-      #./hardware-configuration.nix
-      /etc/nixos/hardware-configuration.nix
-      ./../../../modules/default.nix
-      ./../../../modules/users/tsukia.nix
-      ./../../../modules/users/xanedithas.nix
-      ./../../../modules/users/xan01.nix
-      ./../../../modules/podman.nix
-      ./../../../modules/services.nix
-    ];
+  #./hardware-configuration.nix
+  imports = [
+    /etc/nixos/hardware-configuration.nix
+    ./../../../modules/default.nix
+    ./../../../modules/users/tsukia.nix
+    ./../../../modules/users/xanedithas.nix
+    ./../../../modules/users/xan01.nix
+    ./../../../modules/podman.nix
+    ./../../../modules/services.nix
+  ];
+
+  # Bootloader
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.systemd-boot.configurationLimit = 10;
 
   systemd.timers.maintenance = {
     wantedBy = [ "timers.target" ];
@@ -41,22 +45,6 @@
       OnSuccess = "reboot-after-maintenance.service";
     };
   };
-
-  # mDNS broadcast hostname on LAN
-  services.avahi = {
-    enable = true;
-    nssmdns4 = true;
-    publish = {
-      enable = true;
-      addresses = true;
-    };
-    openFirewall = true;
-  };
-
-  # Bootloader
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.systemd-boot.configurationLimit = 10;
 
   # Networking
   networking.hostName = "tsu01";

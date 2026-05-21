@@ -1,15 +1,26 @@
 { config, pkgs, ... }:{
   
-  imports = 
-    [ # Include the results of the hardware scan.
-      /etc/nixos/hardware-configuration.nix
-      ./../../../modules/default.nix
-      ./../../../modules/users/xanedithas.nix
-      ./../../../modules/users/xan01.nix
-      ./../../../modules/podman.nix
-      ./../../../modules/services.nix
-      ./../../../modules/wg-mesh.nix
-    ];
+  # Include the results of the hardware scan.
+  imports = [
+    /etc/nixos/hardware-configuration.nix
+    ./../../../modules/default.nix
+    ./../../../modules/users/xanedithas.nix
+    ./../../../modules/users/xan01.nix
+    ./../../../modules/podman.nix
+    ./../../../modules/services.nix
+    ./../../../modules/wg-mesh.nix
+  ];
+
+  # Bootloader
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.systemd-boot.configurationLimit = 10;
+
+  # Allow passwordless sudo as wheel
+  security.sudo = {
+    enable = true;
+    wheelNeedsPassword = false;
+  };
 
   systemd.timers.maintenance = {
     wantedBy = [ "timers.target" ];
@@ -39,17 +50,6 @@
     unitConfig = {
       OnSuccess = "reboot-after-maintenance.service";
     };
-  };
-
-  # Bootloader
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.systemd-boot.configurationLimit = 10;
-
-  # Allow passwordless sudo as wheel
-  security.sudo = {
-    enable = true;
-    wheelNeedsPassword = false;
   };
 
   # Networking

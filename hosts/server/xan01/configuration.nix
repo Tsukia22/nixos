@@ -1,17 +1,28 @@
 { config, pkgs, ... }:{
   
-  imports = 
-    [ # Include the results of the hardware scan.
-      /etc/nixos/hardware-configuration.nix
-      ./../../../modules/default.nix
-      ./../../../modules/users/xanedithas.nix
-      ./../../../modules/users/tsu01.nix
-      ./../../../modules/users/dev.nix
-      ./../../../modules/podman.nix
-      ./../../../modules/services.nix
-      ./../../../modules/wg-mesh.nix
-      ./../../../modules/wg-net.nix
-    ];
+  # Include the results of the hardware scan.
+  imports = [
+    /etc/nixos/hardware-configuration.nix
+    ./../../../modules/default.nix
+    ./../../../modules/users/xanedithas.nix
+    ./../../../modules/users/tsu01.nix
+    ./../../../modules/users/dev.nix
+    ./../../../modules/podman.nix
+    ./../../../modules/services.nix
+    ./../../../modules/wg-mesh.nix
+    ./../../../modules/wg-net.nix
+  ];
+  
+  # Bootloader
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.systemd-boot.configurationLimit = 10;
+
+  # Allow passwordless sudo as wheel
+  security.sudo = {
+    enable = true;
+    wheelNeedsPassword = false;
+  };
 
   systemd.timers.maintenance = {
     wantedBy = [ "timers.target" ];
@@ -55,17 +66,6 @@
     };
   };
 
-  # mDNS broadcast hostname on LAN
-  services.avahi = {
-    enable = true;
-    nssmdns4 = true;
-    publish = {
-      enable = true;
-      addresses = true;
-    };
-    openFirewall = true;
-  };
-
   # DNS for wg-net
   services.dnsmasq.settings = {
     interface = "wg-net";
@@ -74,17 +74,6 @@
     no-resolv = true;
     server = [ "9.9.9.9" "149.112.112.112" ]; # Quad9
     conf-file = "/root/wireguard/dnsmasq.conf";
-  };
-
-  # Bootloader
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.systemd-boot.configurationLimit = 10;
-
-  # Allow passwordless sudo as wheel
-  security.sudo = {
-    enable = true;
-    wheelNeedsPassword = false;
   };
 
   # Networking
