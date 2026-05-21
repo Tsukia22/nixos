@@ -69,6 +69,9 @@
     openFirewall = true;
   };
 
+  # Wireguard setting
+  boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
+
   nix.extraOptions = ''
   experimental-features = nix-command flakes
 '';
