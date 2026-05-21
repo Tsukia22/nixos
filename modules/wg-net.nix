@@ -4,7 +4,7 @@
   # IP is set at the host config
   # Generate key: wg genkey | tee wg-net-private.key | wg pubkey > wg-net-public.key
   networking.wg-quick.interfaces.wg-net = {
-    listenPort = 50002;
+    listenPort = 51822;
     privateKeyFile = "/root/wireguard/wg-net-private.key";
     postUp = [
       "wg addconf wg-net /root/wireguard/wg-net-peers.conf"
@@ -18,7 +18,7 @@
   };
 
   networking.firewall = {
-    # allowedUDPPorts = [ 50002 ];
+    allowedUDPPorts = [ 51822 ];
     trustedInterfaces = [ "wg-net" ];
     extraCommands = ''
       iptables -A FORWARD -i wg-net -j ACCEPT
