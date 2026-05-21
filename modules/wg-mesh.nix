@@ -9,9 +9,11 @@
     postUp = [
       "wg addconf wg-mesh /root/wireguard/wg-mesh-peers.conf"
       "iptables -A FORWARD -i wg-mesh -j ACCEPT"
+      "iptables -t nat -A POSTROUTING -s 10.200.0.0/24 -j MASQUERADE"
     ];
     preDown = [
       "iptables -D FORWARD -i wg-mesh -j ACCEPT"
+      "iptables -t nat -D POSTROUTING -s 10.200.0.0/24 -j MASQUERADE"
     ];
   };
 
