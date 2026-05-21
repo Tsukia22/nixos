@@ -58,6 +58,17 @@
     options = "--delete-older-than 30d";
   };
 
+  # mDNS broadcast hostname on LAN
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    publish = {
+      enable = true;
+      addresses = true;
+    };
+    openFirewall = true;
+  };
+
   nix.extraOptions = ''
   experimental-features = nix-command flakes
 '';
