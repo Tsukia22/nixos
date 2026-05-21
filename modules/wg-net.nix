@@ -2,6 +2,7 @@
   
   # Network for clients hub-spoke (behind NAT)
   # IP is set at the host config
+  # Generate key: wg genkey | tee wg-net-private.key | wg pubkey > wg-net-public.key
   networking.wg-quick.interfaces.wg-net = {
     listenPort = 51822;
     privateKeyFile = "/root/wireguard/wg-net-private.key";
