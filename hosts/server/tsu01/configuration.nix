@@ -9,6 +9,8 @@
     ./../../../modules/users/xan01.nix
     ./../../../modules/podman.nix
     ./../../../modules/services.nix
+    ./../../../modules/wg-mesh.nix
+    ./../../../modules/wg-net.nix
   ];
 
   # Bootloader
@@ -61,6 +63,10 @@
     enable = true;
     ports = [ 1993 ];
   };
+
+  # Wireguard config
+  networking.wg-quick.interfaces.wg-mesh.address = [ "10.100.0.3/24" ];
+  networking.wg-quick.interfaces.wg-net.address = [ "10.200.0.3/24" ];
 
   system.stateVersion = "25.05";
 }
