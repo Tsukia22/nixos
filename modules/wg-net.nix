@@ -16,10 +16,13 @@
     trustedInterfaces = [ "wg-net" ];
 
     extraCommands = ''
+      iptables -A INPUT -i wg-net -s 10.200.0.12 -d 10.200.0.1 -j ACCEPT
+      # Drop everything else on wg-net
       iptables -A INPUT -i wg-net -j DROP
     '';
 
     extraStopCommands = ''
+      iptables -D INPUT -i wg-net -s 10.200.0.12 -d 10.200.0.1 -j ACCEPT || true
       iptables -D INPUT -i wg-net -j DROP || true
     '';
   };
