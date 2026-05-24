@@ -89,8 +89,7 @@
   # DNS for wg-net
   services.dnsmasq.enable = true;
   services.dnsmasq.settings = {
-    interface = "wg-net";
-    listen-address = "127.0.0.1,10.200.0.1";
+    interface = [ "wg-net" "lo" ];
     bind-interfaces = true;
     no-log-queries = true;
     no-resolv = true;
