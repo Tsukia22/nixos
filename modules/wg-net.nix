@@ -15,10 +15,11 @@
     # allowedUDPPorts = [ 50002 ];
     trustedInterfaces = [ "wg-net" ];
 
+    # Allow specific exceptions first (order matters in iptables)
     extraCommands = ''
-      # Allow specific exceptions first (order matters in iptables)
-      iptables -A INPUT -i wg-net -s 10.200.0.11 -d 10.200.0.1 -j ACCEPT
-      iptables -A INPUT -i wg-net -s 10.200.0.12 -d 10.200.0.1 -j ACCEPT
+      #iptables -A INPUT -i wg-net -s 10.200.0.12 -d 10.200.0.1 -j ACCEPT
+      iptables -A INPUT -i wg-net -s 10.200.0.0/24 -d 10.200.0.1 -j ACCEPT
+      iptables -A INPUT -i wg-net -s 10.200.0.0/24 -d 10.200.0.3 -j ACCEPT
 
       iptables -A FORWARD -i wg-net -j ACCEPT
       iptables -A FORWARD -o wg-net -j ACCEPT
@@ -29,8 +30,9 @@
     '';
 
     extraStopCommands = ''
-      iptables -D INPUT -i wg-net -s 10.200.0.11 -d 10.200.0.1 -j ACCEPT || true
-      iptables -D INPUT -i wg-net -s 10.200.0.12 -d 10.200.0.1 -j ACCEPT || true
+      #iptables -D INPUT -i wg-net -s 10.200.0.12 -d 10.200.0.1 -j ACCEPT || true
+      iptables -A INPUT -i wg-net -s 10.200.0.0/24 -d 10.200.0.1 -j ACCEPT
+      iptables -A INPUT -i wg-net -s 10.200.0.0/24 -d 10.200.0.3 -j ACCEPT
 
       iptables -D FORWARD -i wg-net -j ACCEPT || true
       iptables -D FORWARD -o wg-net -j ACCEPT || true
