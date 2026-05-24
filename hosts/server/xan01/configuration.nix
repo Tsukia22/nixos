@@ -86,17 +86,5 @@
   networking.wg-quick.interfaces.wg-mesh.address = [ "10.100.0.1/24" ];
   networking.wg-quick.interfaces.wg-net.address = [ "10.200.0.1/24" ];
 
-  # DNS for wg-net
-  services.dnsmasq.enable = true;
-  services.dnsmasq.settings = {
-    interface = "wg-net";
-    bind-interfaces = true;
-    no-log-queries = true;
-    no-resolv = true;
-    server = [ "9.9.9.9" "149.112.112.112" ]; # Quad9
-    conf-file = "/etc/dnsmasq.conf";
-  };
-  networking.firewall.interfaces."wg-net".allowedUDPPorts = [ 53 ];
-
   system.stateVersion = "25.05";
 }
