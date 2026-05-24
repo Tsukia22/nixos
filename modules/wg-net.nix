@@ -14,15 +14,6 @@
   networking.firewall = {
     # allowedUDPPorts = [ 50002 ];
     trustedInterfaces = [ "wg-net" ];
-
-    extraCommands = ''
-      # Drop everything else on wg-net
-      iptables -A INPUT -i wg-net -j DROP
-    '';
-
-    extraStopCommands = ''
-      iptables -D INPUT -i wg-net -j DROP || true
-    '';
   };
 
 }
