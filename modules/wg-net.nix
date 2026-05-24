@@ -17,11 +17,9 @@
 
     extraCommands = ''
       # Allow specific exceptions first (order matters in iptables)
-      iptables -A INPUT -i wg-net -s 10.200.0.12 -d 10.200.0.1 -j ACCEPT
 
       iptables -A FORWARD -i wg-net -j ACCEPT
       iptables -A FORWARD -o wg-net -j ACCEPT
-      iptables -t nat -A POSTROUTING -s 10.200.0.0/24 -j MASQUERADE
 
       # Drop everything else on wg-net
       iptables -A INPUT -i wg-net -j DROP
@@ -31,7 +29,6 @@
       iptables -D INPUT -i wg-net -s 10.200.0.12 -d 10.200.0.1 -j ACCEPT
       iptables -D FORWARD -i wg-net -j ACCEPT
       iptables -D FORWARD -o wg-net -j ACCEPT
-      iptables -t nat -D POSTROUTING -s 10.200.0.0/24 -j MASQUERADE
       iptables -D INPUT -i wg-net -j DROP
     '';
   };
