@@ -89,7 +89,7 @@
   # DNS for wg-net
   services.dnsmasq.enable = true;
   services.dnsmasq.settings = {
-    interface = [ "wg-net" "lo" ];
+    interface = "wg-net";
     bind-interfaces = true;
     no-log-queries = true;
     no-resolv = true;
