@@ -87,7 +87,7 @@
   networking.wg-quick.interfaces.wg-net.address = [ "10.200.0.1/24" ];
 
   # DNS for wg-net
-  sevices.dnsmasq.enable = true;
+  sevicess.dnsmasq.enable = true;
   services.dnsmasq.settings = {
     interface = "wg-net";
   listen-address = [ "127.0.0.1" "10.200.0.1" ];
