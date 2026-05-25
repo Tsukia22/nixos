@@ -90,7 +90,7 @@
     enable = true;
     resolveLocalQueries = false;
     settings = {
-      interface = "wg0";
+      interface = "wg-net";
       bind-interfaces = true;
       no-resolv = true;
       no-poll = true;
