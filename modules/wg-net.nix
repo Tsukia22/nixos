@@ -17,8 +17,7 @@
 
     # Allow specific exceptions first (order matters in iptables)
     extraCommands = ''
-      iptables -A INPUT -i wg-net -s 10.200.0.11/24 -d 10.100.0.2 -j ACCEPT
-      iptables -A INPUT -i wg-net -s 10.200.0.12/24 -d 10.100.0.2 -j ACCEPT
+      iptables -A INPUT -i wg-net -s 10.200.0.12 -d 10.100.0.2 -j ACCEPT
 
       iptables -A INPUT -i wg-net -s 10.200.0.0/24 -d 10.200.0.1 -j ACCEPT
       iptables -A INPUT -i wg-net -s 10.200.0.0/24 -d 10.200.0.3 -j ACCEPT
@@ -32,8 +31,7 @@
     '';
 
     extraStopCommands = ''
-      iptables -D INPUT -i wg-net -s 10.200.0.11/24 -d 10.100.0.2 -j ACCEPT || true
-      iptables -D INPUT -i wg-net -s 10.200.0.12/24 -d 10.100.0.2 -j ACCEPT || true
+      iptables -D INPUT -i wg-net -s 10.200.0.12 -d 10.100.0.2 -j ACCEPT || true
 
       iptables -D INPUT -i wg-net -s 10.200.0.0/24 -d 10.200.0.1 -j ACCEPT || true
       iptables -D INPUT -i wg-net -s 10.200.0.0/24 -d 10.200.0.3 -j ACCEPT || true
