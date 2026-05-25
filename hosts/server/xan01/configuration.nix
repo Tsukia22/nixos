@@ -94,6 +94,9 @@
       bind-interfaces = true;
       no-resolv = true;
       no-poll = true;
+      local = "/internal/";
+      domain = "internal";
+      expand-hosts = true;
       address = [
         "/xan/10.200.0.1"
         "/tsu/10.200.0.3"
