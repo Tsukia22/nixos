@@ -108,10 +108,11 @@
 
         chain forward {
           type filter hook forward priority filter; policy drop;
-
           ct state established,related accept
 
-          # Bridge .12 (wg-net client) to 10.100.0.2 (mesh-only machine) via xan01
+          iifname "wg-net" oifname "wg-net" ip saddr 10.200.0.0/24 ip daddr 10.200.0.0/24 accept
+
+          iifname "wg-net" ip saddr 10.200.0.11 ip daddr 10.100.0.2 accept
           iifname "wg-net" ip saddr 10.200.0.12 ip daddr 10.100.0.2 accept
         }
       }
@@ -119,8 +120,7 @@
       table ip nat {
         chain postrouting {
           type nat hook postrouting priority 100;
-
-          # Masquerade so 10.100.0.2 knows to send responses back via xan01
+          iifname "wg-net" ip saddr 10.200.0.11 ip daddr 10.100.0.2 masquerade
           iifname "wg-net" ip saddr 10.200.0.12 ip daddr 10.100.0.2 masquerade
         }
       }
