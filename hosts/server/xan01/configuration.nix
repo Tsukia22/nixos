@@ -69,17 +69,59 @@
   # Networking
   networking.hostName = "xan01";
   boot.kernel.sysctl."net.ipv4.ip_unprivileged_port_start" = 80;
-  networking.firewall.allowedTCPPorts = [ 443 80 ];
-  networking.firewall.allowedTCPPortRanges = [
-    { from = 25560; to = 25564; } # local use
-    { from = 50000; to = 51000; } # external use
-  ];
-  networking.firewall.allowedUDPPortRanges = [
-    { from = 50000; to = 51000; } # external use
-  ];
-  services.openssh = {
+
+  networking.nftables = {
     enable = true;
-    ports = [ 1993 ];
+    ruleset = ''
+      table inet filter {
+        chain input {
+          type filter hook input priority 0; policy drop;
+
+          # Allow established/related connections
+          ct state established,related accept
+          # Allow loopback
+          iifname "lo" accept
+
+          # mDNS
+          udp dport 5353 accept
+
+          # SSH
+          tcp dport 1993 accept
+
+          # HTTP/HTTPS
+          tcp dport { 80, 443 } accept
+
+          # Port ranges
+          tcp dport 25560-25564 accept
+          tcp dport 50000-51000 accept
+          udp dport 50000-51000 accept
+
+          # Trust wg-mesh
+          iifname "wg-mesh" accept
+
+          # wg-net selective rules
+          iifname "wg-net" ip saddr 10.200.0.12 ip daddr 10.100.0.2 accept
+          iifname "wg-net" ip saddr 10.200.0.0/24 ip daddr 10.200.0.1 accept
+          iifname "wg-net" ip saddr 10.200.0.0/24 ip daddr 10.200.0.3 accept
+          iifname "wg-net" drop
+        }
+
+        chain forward {
+          type filter hook forward priority 0; policy accept;
+
+          iifname "wg-net" accept
+          oifname "wg-net" accept
+        }
+      }
+
+      table ip nat {
+        chain postrouting {
+          type nat hook postrouting priority 100;
+
+          ip saddr 10.200.0.0/24 masquerade
+        }
+      }
+    '';
   };
 
   # Wireguard config

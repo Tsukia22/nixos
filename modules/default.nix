@@ -18,7 +18,7 @@
   };
   
   # Firewall
-  networking.firewall.enable = true;
+  networking.firewall.enable = false;
 
   # Packages
   environment.systemPackages = with pkgs; [
@@ -59,6 +59,7 @@
   };
 
   # mDNS broadcast hostname on LAN
+  # firewall handled by host config
   services.avahi = {
     enable = true;
     nssmdns4 = true;
@@ -66,7 +67,6 @@
       enable = true;
       addresses = true;
     };
-    openFirewall = true;
   };
 
   # Wireguard setting
