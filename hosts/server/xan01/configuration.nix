@@ -86,5 +86,20 @@
   networking.wg-quick.interfaces.wg-mesh.address = [ "10.100.0.1/24" ];
   networking.wg-quick.interfaces.wg-net.address = [ "10.200.0.1/24" ];
 
+  services.dnsmasq = {
+    enable = true;
+    resolveLocalQueries = false;
+    settings = {
+      interface = "wg0";
+      bind-interfaces = true;
+      no-resolv = true;
+      no-poll = true;
+      address = [
+        "/xan/10.200.0.1"
+        "/tsu/10.200.0.3"
+      ];
+    };
+  };
+
   system.stateVersion = "25.05";
 }
