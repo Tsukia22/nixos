@@ -32,6 +32,8 @@
 
   # SSH hardening
   services.openssh = {
+    enable = true;
+    ports = [ 1993 ];
     settings = {
       PermitRootLogin = "no";
       PasswordAuthentication = false;
