@@ -44,11 +44,11 @@
   services.fail2ban = {
     enable = true;
     maxretry = 3;
-    bantime = "12h";
+    bantime = "2h";
     bantime-increment = {
       enable = true;
-      multipliers = "1 2 4 8 16 32 64";
-      maxtime = "168h";
+      multipliers = "1 2 3 4 6 8 12";
+      maxtime = "24h";
       overalljails = true;
     };
   };
