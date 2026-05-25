@@ -29,4 +29,10 @@
     };
   };
 
+  # Avoid race condition on boot
+  systemd.services.dnsmasq = {
+    after = [ "sys-subsystem-net-devices-wg-net.device" ];
+    wants = [ "sys-subsystem-net-devices-wg-net.device" ];
+  };
+
 }
