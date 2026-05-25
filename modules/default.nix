@@ -65,7 +65,6 @@
   services.avahi = {
     enable = true;
     nssmdns4 = true;
-    allowInterfaces = [ "enp3s0" ];
     publish = {
       enable = true;
       addresses = true;
