@@ -52,6 +52,9 @@
     };
   };
 
+  # Networking
+  networking.hostName = "xan02";
+
   # Firewall
   networking.nftables = {
     enable = true;
