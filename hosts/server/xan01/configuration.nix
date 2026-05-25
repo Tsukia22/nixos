@@ -104,6 +104,9 @@
 
           # mDNS
           udp dport 5353 accept
+
+          # ping
+          ip protocol icmp accept
         }
 
         chain forward {
