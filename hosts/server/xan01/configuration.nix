@@ -66,24 +66,30 @@
     };
   };
 
-  # Networking
-  networking.hostName = "xan01";
-  boot.kernel.sysctl."net.ipv4.ip_unprivileged_port_start" = 80;
-
+  # Firewall
   networking.nftables = {
     enable = true;
     ruleset = ''
       table inet filter {
         chain input {
-          type filter hook input priority 0; policy drop;
+          type filter hook input priority filter; policy drop;
 
           # Allow established/related connections
           ct state established,related accept
           # Allow loopback
           iifname "lo" accept
 
-          # mDNS
-          udp dport 5353 accept
+          # wg-mesh: trusted backbone between servers, only needs container network access
+          # if a mesh server needs to reach wg-net it does so via its own wg-net interface
+          iifname "wg-mesh" ip daddr 10.100.0.0/24 accept
+          iifname "wg-mesh" drop
+
+          # wg-net: client access network
+          # .12 is bridged to 10.100.0.2 (mesh-only machine) via xan01
+          iifname "wg-net" ip saddr 10.200.0.12 ip daddr 10.100.0.2 accept
+          # all clients can reach machines on the wg-net network
+          iifname "wg-net" ip saddr 10.200.0.0/24 ip daddr 10.200.0.0/24 accept
+          iifname "wg-net" drop
 
           # SSH
           tcp dport 1993 accept
@@ -96,21 +102,17 @@
           tcp dport 50000-51000 accept
           udp dport 50000-51000 accept
 
-          # Trust wg-mesh
-          iifname "wg-mesh" accept
-
-          # wg-net selective rules
-          iifname "wg-net" ip saddr 10.200.0.12 ip daddr 10.100.0.2 accept
-          iifname "wg-net" ip saddr 10.200.0.0/24 ip daddr 10.200.0.1 accept
-          iifname "wg-net" ip saddr 10.200.0.0/24 ip daddr 10.200.0.3 accept
-          iifname "wg-net" drop
+          # mDNS
+          udp dport 5353 accept
         }
 
         chain forward {
-          type filter hook forward priority 0; policy accept;
+          type filter hook forward priority filter; policy drop;
 
-          iifname "wg-net" accept
-          oifname "wg-net" accept
+          ct state established,related accept
+
+          # Bridge .12 (wg-net client) to 10.100.0.2 (mesh-only machine) via xan01
+          iifname "wg-net" ip saddr 10.200.0.12 ip daddr 10.100.0.2 accept
         }
       }
 
@@ -118,7 +120,8 @@
         chain postrouting {
           type nat hook postrouting priority 100;
 
-          ip saddr 10.200.0.0/24 masquerade
+          # Masquerade so 10.100.0.2 knows to send responses back via xan01
+          iifname "wg-net" ip saddr 10.200.0.12 ip daddr 10.100.0.2 masquerade
         }
       }
     '';
