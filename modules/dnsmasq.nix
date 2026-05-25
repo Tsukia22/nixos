@@ -23,6 +23,9 @@
         "/t.t/10.200.0.3"
         "/tsu.internal/10.200.0.3"
       ];
+      srv-host = [
+        "_minecraft._tcp.greg.tsu,t.t,50400,0,5"
+      ];
     };
   };
 
