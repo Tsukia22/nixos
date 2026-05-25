@@ -123,6 +123,7 @@
       table ip nat {
         chain postrouting {
           type nat hook postrouting priority 100;
+          iifname "wg-net" ip saddr 10.200.0.0/24 ip daddr 10.200.0.0/24 masquerade
           iifname "wg-net" ip saddr 10.200.0.11 ip daddr 10.100.0.2 masquerade
           iifname "wg-net" ip saddr 10.200.0.12 ip daddr 10.100.0.2 masquerade
         }
