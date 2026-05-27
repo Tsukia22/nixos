@@ -3,13 +3,20 @@
   services.dnsmasq = {
     enable = true;
     resolveLocalQueries = false;
-    server = [ "9.9.9.9" "149.112.112.112" "2620:fe::fe" "2620:fe::9" "1.1.1.1" "8.8.8.8" ];
     settings = {
       interface = "wg-net";
       bind-interfaces = true;
       no-resolv = true;
       no-poll = true;
       expand-hosts = true;
+      server = [
+        "9.9.9.9"
+        "149.112.112.112"
+        "2620:fe::fe"
+        "2620:fe::9"
+        "1.1.1.1"
+        "8.8.8.8"
+      ];
       address = [
         "/xan.xan/10.200.0.1"
         "/xan.lan/10.200.0.1"
