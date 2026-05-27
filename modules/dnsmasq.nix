@@ -3,6 +3,7 @@
   services.dnsmasq = {
     enable = true;
     resolveLocalQueries = false;
+    server = [ "9.9.9.9" "149.112.112.112" "2620:fe::fe" "2620:fe::9" "1.1.1.1" "8.8.8.8" ];
     settings = {
       interface = "wg-net";
       bind-interfaces = true;
