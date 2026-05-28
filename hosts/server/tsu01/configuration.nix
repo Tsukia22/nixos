@@ -18,6 +18,23 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.systemd-boot.configurationLimit = 10;
 
+  # Allow passwordless sudo as wheel
+  security.sudo = {
+    enable = true;
+    wheelNeedsPassword = false;
+    extraRules = [
+      {
+        users = [ "tsukia" "xanedithas" ];
+        commands = [
+          {
+            command = "ALL";
+            options = [ "NOPASSWD" ];
+          }
+        ];
+      }
+    ];
+  };
+
   systemd.timers.maintenance = {
     wantedBy = [ "timers.target" ];
     timerConfig = {

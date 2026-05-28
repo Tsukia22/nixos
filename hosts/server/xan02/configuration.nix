@@ -21,6 +21,30 @@
   security.sudo = {
     enable = true;
     wheelNeedsPassword = false;
+    extraRules = [
+      {
+        users = [ "xanedithas" ];
+        commands = [
+          {
+            command = "ALL";
+            options = [ "NOPASSWD" ];
+          }
+        ];
+      }
+      {
+        users = [ "tsu01" "xan01" ];
+        commands = [
+          {
+            command = "/run/current-system/sw/bin/btrfs receive *";
+            options = [ "NOPASSWD" ];
+          }
+          {
+            command = "/run/current-system/sw/bin/btrfs send *";
+            options = [ "NOPASSWD" ];
+          }
+        ];
+      }
+    ];
   };
 
   systemd.timers.maintenance = {

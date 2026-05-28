@@ -5,7 +5,6 @@
     /etc/nixos/hardware-configuration.nix
     ./../../../modules/default.nix
     ./../../../modules/users/xanedithas.nix
-    ./../../../modules/users/dev.nix
     ./../../../modules/podman.nix
     ./../../../modules/services.nix
     ./../../../modules/wg-mesh.nix
@@ -22,6 +21,17 @@
   security.sudo = {
     enable = true;
     wheelNeedsPassword = false;
+    extraRules = [
+      {
+        users = [ "xanedithas" ];
+        commands = [
+          {
+            command = "ALL";
+            options = [ "NOPASSWD" ];
+          }
+        ];
+      }
+    ];
   };
 
   systemd.timers.maintenance = {
