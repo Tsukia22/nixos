@@ -13,15 +13,15 @@
       nixosConfigurations = {
         tsu01 = nixpkgs.lib.nixosSystem {
           inherit system;
-          modules = [ ./hosts/server/tsu01/configuration.nix ];
+          modules = [ ./hosts/tsu01/configuration.nix ];
         };
         xan01 = nixpkgs.lib.nixosSystem {
           inherit system;
-          modules = [ ./hosts/server/xan01/configuration.nix ];
+          modules = [ ./hosts/xan01/configuration.nix ];
         };
         xan02 = nixpkgs.lib.nixosSystem {
           inherit system;
-          modules = [ ./hosts/server/xan02/configuration.nix ];
+          modules = [ ./hosts/xan02/configuration.nix ];
         };
       };
     };
