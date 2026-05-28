@@ -11,6 +11,8 @@
     ../../modules/wg-mesh.nix
     ../../modules/wg-net.nix
     ../../modules/dnsmasq.nix
+    ./firewall.nix
+    ./backup.nix
   ];
 
   # Bootloader
@@ -43,99 +45,9 @@
     };
   };
 
-  systemd.services.auto-backup = {
-    after = [ "auto-update.service" ];
-    description = "NixOS Flake auto backup";
-    path = [ pkgs.nix ];
-    serviceConfig = {
-      Type = "oneshot";
-      User = "root";
-      WorkingDirectory = "/root/nixos";
-      StandardOutput = "append:/root/backup-service.log";
-      StandardError = "append:/root/backup-service.log";
-      ExecStart = pkgs.writeShellScript "nixos-backup" ''
-        set -eu
-        
-        echo $(date +"%Y-%m-%d %H:%M:%S")
-        echo "Backing up volumes..."
-
-        btrfs subvolume snapshot -r /home/kami/.local/share/containers/storage/volumes /var/snapshots/volumes/volumes-$(date +%Y%m%d)
-
-        PREV=$(ls /var/snapshots/volumes/ | sort | tail -2 | head -1)
-        CURR=$(ls /var/snapshots/volumes/ | sort | tail -1)
-
-        echo "$PREV -> $CURR"
-
-        btrfs send -p /var/snapshots/volumes/$PREV /var/snapshots/volumes/$CURR | ssh tsu01@10.100.0.2 -p 1993 "sudo btrfs receive ~/backups/"
-
-        echo "Backup volumes complete."
-      '';
-    };
-    
-    unitConfig = {
-      OnSuccess = "reboot-after-maintenance.service";
-    };
-  };
-
   # Networking
   networking.hostName = "tsu01";
   boot.kernel.sysctl."net.ipv4.ip_unprivileged_port_start" = 80;
-  
-  # Firewall
-  networking.nftables = {
-    enable = true;
-    ruleset = ''
-      table inet filter {
-        chain input {
-          type filter hook input priority filter; policy drop;
-
-          # Allow established/related connections
-          ct state established,related accept
-          # Allow loopback
-          iifname "lo" accept
-
-          # wg-mesh: trusted backbone between servers
-          iifname "wg-mesh" ip daddr 10.100.0.0/24 accept
-          iifname "wg-mesh" drop
-
-          # wg-net: client access network
-          iifname "wg-net" ip saddr 10.200.0.0/24 ip daddr 10.200.0.0/24 accept
-          iifname "wg-net" drop
-
-          # SSH
-          tcp dport 1993 accept
-
-          # HTTP/HTTPS
-          tcp dport { 80, 443 } accept
-
-          # Port ranges
-          tcp dport 25560-25564 accept
-          tcp dport 50000-51000 accept
-          udp dport 50000-51000 accept
-
-          # mDNS
-          udp dport 5353 accept
-
-          # ping
-          ip protocol icmp accept
-        }
-
-        chain forward {
-          type filter hook forward priority filter; policy drop;
-          ct state established,related accept
-
-          iifname "wg-net" oifname "wg-net" ip saddr 10.200.0.0/24 ip daddr 10.200.0.0/24 accept
-        }
-      }
-
-      table ip nat {
-        chain postrouting {
-          type nat hook postrouting priority 100;
-          iifname "wg-net" ip saddr 10.200.0.0/24 ip daddr 10.200.0.0/24 masquerade
-        }
-      }
-    '';
-  };
 
   # Wireguard config
   networking.wg-quick.interfaces.wg-mesh.address = [ "10.100.0.3/24" ];
