@@ -3,13 +3,13 @@
   # Include the results of the hardware scan.
   imports = [
     /etc/nixos/hardware-configuration.nix
-    ./../../../modules/default.nix
-    ./../../../modules/users/xanedithas.nix
-    ./../../../modules/users/xan01.nix
-    ./../../../modules/users/tsu01.nix
-    ./../../../modules/podman.nix
-    ./../../../modules/services.nix
-    ./../../../modules/wg-mesh.nix
+    ../../modules/default.nix
+    ../../users/xanedithas.nix
+    ../../users/xan01.nix
+    ../../users/tsu01.nix
+    ../../modules/podman.nix
+    ../../modules/services.nix
+    ../../modules/wg-mesh.nix
   ];
 
   # Bootloader
