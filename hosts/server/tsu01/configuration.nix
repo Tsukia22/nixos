@@ -6,7 +6,6 @@
     ./../../../modules/default.nix
     ./../../../modules/users/tsukia.nix
     ./../../../modules/users/xanedithas.nix
-    ./../../../modules/users/xan01.nix
     ./../../../modules/podman.nix
     ./../../../modules/services.nix
     ./../../../modules/wg-mesh.nix
@@ -40,7 +39,19 @@
       ExecStart = pkgs.writeShellScript "nixos-backup" ''
         set -eu
         
-        echo "Not yet implemented auto-backup on $(hostname)"
+        echo $(date +"%Y-%m-%d %H:%M:%S")
+        echo "Backing up volumes..."
+
+        btrfs subvolume snapshot -r /home/kami/.local/share/containers/storage/volumes /var/snapshots/volumes/volumes-$(date +%Y%m%d)
+
+        PREV=$(ls /var/snapshots/volumes/ | sort | tail -2 | head -1)
+        CURR=$(ls /var/snapshots/volumes/ | sort | tail -1)
+
+        echo "$PREV -> $CURR"
+
+        btrfs send -p /var/snapshots/volumes/$PREV /var/snapshots/volumes/$CURR | ssh tsu01@10.100.0.2 -p 1993 "sudo btrfs receive ~/backups/"
+
+        echo "Backup volumes complete."
       '';
     };
     

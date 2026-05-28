@@ -6,6 +6,7 @@
     ./../../../modules/default.nix
     ./../../../modules/users/xanedithas.nix
     ./../../../modules/users/xan01.nix
+    ./../../../modules/users/tsu01.nix
     ./../../../modules/podman.nix
     ./../../../modules/services.nix
     ./../../../modules/wg-mesh.nix
