@@ -35,12 +35,13 @@
         
         echo "Done starting containers."
       '';
+      OnFailure = "curl http://10.200.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME/fail";
     };
   };
   
   systemd.services.maintenance = {
     description = "Maintenance";
-    path = [ pkgs.coreutils pkgs.bash pkgs.podman ];
+    path = [ pkgs.coreutils pkgs.bash pkgs.podman pkgs.curl ];
     serviceConfig = {
       Type = "oneshot";
       User = "kami";
@@ -61,13 +62,14 @@
     };
     unitConfig = {
       OnSuccess = "auto-update.service";
+      OnFailure = "curl http://10.200.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME/fail";
     };
   };
 
   systemd.services.auto-update = {
     after = [ "maintenance.service" ];
     description = "NixOS Flake auto update";
-    path = [ pkgs.git pkgs.nix pkgs.nixos-rebuild ];
+    path = [ pkgs.git pkgs.nix pkgs.nixos-rebuild pkgs.curl ];
     serviceConfig = {
       Type = "oneshot";
       User = "root";
@@ -90,6 +92,7 @@
     
     unitConfig = {
       OnSuccess = "auto-backup.service"; # In the host configuration
+      OnFailure = "curl http://10.200.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME/fail";
     };
   };
   
