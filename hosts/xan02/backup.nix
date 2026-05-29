@@ -13,7 +13,7 @@
       ExecStart = pkgs.writeShellScript "nixos-backup" ''
         set -eu
         
-        echo "Not yet implemented auto-backup on $(hostname)"
+        echo "Not yet implemented auto-backup on $HOSTNAME"
       '';
     };
     
