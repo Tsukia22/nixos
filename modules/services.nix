@@ -18,7 +18,7 @@
     after = [ "podman.service" ];
     wantedBy = [ "multi-user.target" ];
     description = "Automatically restart containers";
-    path = [ pkgs.coreutils pkgs.findutils pkgs.podman ];
+    path = [ pkgs.coreutils pkgs.findutils pkgs.podman pkgs.curl ];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;  # Service stays "active" after running once
@@ -51,6 +51,8 @@
         
         echo $(date +"%Y-%m-%d %H:%M:%S")
         echo "Starting maintenance..."
+
+        curl http://10.200.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME/start
         
         bash -c 'podman ps -q > /home/kami/running && podman stop --all --timeout 60'
         
@@ -93,13 +95,16 @@
   
   systemd.services.reboot-after-maintenance = {
     description = "Reboot after maintenance";
-    path = [ pkgs.coreutils ];
+    path = [ pkgs.coreutils pkgs.curl ];
     serviceConfig = {
       Type = "oneshot";
       ExecStart = pkgs.writeShellScript "reboot-after-maintenance" ''
         set -eu
 
         echo $(date +"%Y-%m-%d %H:%M:%S")
+
+        curl http://10.200.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME
+
         echo "Rebooting..."
         
         reboot
