@@ -3,7 +3,7 @@
   systemd.services.auto-backup = {
     after = [ "auto-update.service" ];
     description = "NixOS Flake auto backup";
-    path = [ pkgs.nix ];
+    path = [ pkgs.btrfs-progs pkgs.openssh ];
     serviceConfig = {
       Type = "oneshot";
       User = "root";
