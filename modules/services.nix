@@ -34,8 +34,12 @@
         xargs -r -n 1 podman restart < /home/kami/running
         
         echo "Done starting containers."
+        echo "Waiting 5 seconds to send health ping"
+
+        sleep 5
+        curl http://10.100.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME
       '';
-      OnFailure = "curl http://10.200.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME/fail";
+      OnFailure = "curl http://10.100.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME/fail";
     };
   };
   
@@ -53,7 +57,7 @@
         echo $(date +"%Y-%m-%d %H:%M:%S")
         echo "Starting maintenance..."
 
-        curl http://10.200.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME/start
+        curl http://10.100.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME/start
         
         bash -c 'podman ps -q > /home/kami/running && podman stop --all --timeout 60'
         
@@ -62,7 +66,7 @@
     };
     unitConfig = {
       OnSuccess = "auto-update.service";
-      OnFailure = "curl http://10.200.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME/fail";
+      OnFailure = "curl http://10.100.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME/fail";
     };
   };
 
@@ -92,7 +96,7 @@
     
     unitConfig = {
       OnSuccess = "auto-backup.service"; # In the host configuration
-      OnFailure = "curl http://10.200.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME/fail";
+      OnFailure = "curl http://10.100.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME/fail";
     };
   };
   
@@ -105,8 +109,6 @@
         set -eu
 
         echo $(date +"%Y-%m-%d %H:%M:%S")
-
-        curl http://10.200.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME
 
         echo "Rebooting..."
         
