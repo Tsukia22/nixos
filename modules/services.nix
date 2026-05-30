@@ -39,6 +39,8 @@
         sleep 5
         curl http://10.100.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME
       '';
+    };
+    unitConfig = {
       OnFailure = "curl http://10.100.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME/fail";
     };
   };
@@ -93,7 +95,6 @@
         echo "Update complete. Changes will apply on boot."
       '';
     };
-    
     unitConfig = {
       OnSuccess = "auto-backup.service"; # In the host configuration
       OnFailure = "curl http://10.100.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME/fail";
