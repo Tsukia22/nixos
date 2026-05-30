@@ -29,7 +29,7 @@
           tcp dport { 80, 443 } accept
 
           # Port ranges
-          tcp dport 25560-25564 accept
+          tcp dport 25550-25564 accept
           tcp dport 50000-51000 accept
           udp dport 50000-51000 accept
 
