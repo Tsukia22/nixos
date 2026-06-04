@@ -1,5 +1,7 @@
-{ config, pkgs, ... }: {
-
+{ config, pkgs, ... }: 
+let
+  scripts = import ./scripts.nix { inherit pkgs; };
+in {
   # # Automatically start containers should-start-on-boot
   # systemd.services.podman-autostart = {
   #   enable = true;
@@ -40,13 +42,14 @@
         curl http://10.100.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME
       '';
     };
-    unitConfig = {
-      OnFailure = "curl http://10.100.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME/fail";
-    };
+#    unitConfig = {
+#      OnFailure = "curl http://10.100.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME/fail";
+#    };
   };
   
   systemd.services.maintenance = {
     description = "Maintenance";
+    wantedBy = lib.mkForce [];
     path = [ pkgs.coreutils pkgs.bash pkgs.podman pkgs.curl ];
     serviceConfig = {
       Type = "oneshot";
@@ -66,15 +69,15 @@
         echo "Done running maintenance."
       '';
     };
-    unitConfig = {
-      OnSuccess = "auto-update.service";
-      OnFailure = "curl http://10.100.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME/fail";
-    };
+#    unitConfig = {
+#      OnSuccess = "auto-update.service";
+#      OnFailure = "curl http://10.100.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME/fail";
+#    };
   };
 
   systemd.services.auto-update = {
-    after = [ "maintenance.service" ];
     description = "NixOS Flake auto update";
+    wantedBy = lib.mkForce [];
     path = [ pkgs.git pkgs.nix pkgs.nixos-rebuild pkgs.curl ];
     serviceConfig = {
       Type = "oneshot";
@@ -95,67 +98,119 @@
         echo "Update complete. Changes will apply on boot."
       '';
     };
-    unitConfig = {
-      OnSuccess = "auto-backup.service"; # In the host configuration
-      OnFailure = "curl http://10.100.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME/fail";
-    };
+#    unitConfig = {
+#      OnSuccess = "auto-backup.service"; # In the host configuration
+#      OnFailure = "curl http://10.100.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME/fail";
+#    };
   };
   
   systemd.services.reboot-after-maintenance = {
     description = "Reboot after maintenance";
+    serviceConfig.Type = "oneshot";
+    wantedBy = lib.mkForce [];
     path = [ pkgs.coreutils pkgs.curl ];
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = pkgs.writeShellScript "reboot-after-maintenance" ''
-        set -eu
-
-        echo $(date +"%Y-%m-%d %H:%M:%S")
-
-        echo "Rebooting..."
-        
-        reboot
-      '';
-    };
+    script = ''
+      set -eu
+      echo $(date +"%Y-%m-%d %H:%M:%S")
+      echo "Rebooting..."
+      reboot
+    '';
   };
   
-  systemd.services.manual-shutdown = {
-    description = "Manual shutdown for unplanned maintenance";
-    path = [ pkgs.util-linux ];
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = pkgs.writeShellScript "manual-shutdown" ''
-        set -eu
+  systemd.services.test-fail = {
+    serviceConfig.Type = "oneshot";
+    wantedBy = lib.mkForce [];
+    onFailure = [ "notify-fail.service" ];
+    script = ''exit 1'';
+  };
 
-        echo $(date +"%Y-%m-%d %H:%M:%S")
+  systemd.services.notify-fail = {
+    serviceConfig.Type = "oneshot";
+    wantedBy = lib.mkForce [];
+    script = scripts.notifyFail { message = "oh no"; target = "10.100.0.1"; };
+  };
+
+  systemd.services.test-seq = {
+    description = "Test sequence";
+    serviceConfig.Type = "oneshot";
+    wantedBy = lib.mkForce [];
+    script = ''
+      echo "a"
+      systemctl start seq-a
+      echo "b"
+      systemctl start seq-b
+      echo "c"
+      systemctl start seq-c
+      echo "done"
+    '';
+  };
+
+  systemd.services.seq-a = {
+    description = "Test sequence 1";
+    serviceConfig.Type = "oneshot";
+    wantedBy = lib.mkForce [];
+    path = [ pkgs.coreutils ];
+    script = ''
+      echo "1"
+      sleep 4
+      echo "1-4"
+    '';
+  };
+
+  systemd.services.seq-b = {
+    description = "Test sequence 2";
+    serviceConfig.Type = "oneshot";
+    wantedBy = lib.mkForce [];
+    path = [ pkgs.coreutils ];
+    script = ''
+      echo "2"
+      sleep 2
+      echo "2-2"
+    '';
+  };
+
+  systemd.services.seq-b = {
+    description = "Test sequence 2";
+    serviceConfig.Type = "oneshot";
+    wantedBy = lib.mkForce [];
+    path = [ pkgs.coreutils ];
+    script = ''
+      echo "3"
+      sleep 1
+      echo "3-1"
+    '';
+  };
+
+  let {
+    sharedScript = ''
+      set -eu
+      echo $(date +"%Y-%m-%d %H:%M:%S")      
+      cd /home/kami
+      runuser -l kami -c 'podman ps -q > /home/kami/running'
+      runuser -l kami -c 'podman stop --all --timeout 20'
+    ''
+  } in {
+    systemd.services.manual-shutdown = {
+      description = "Manual shutdown";
+      serviceConfig.Type = "oneshot";
+      wantedBy = lib.mkForce [];
+      path = [ pkgs.util-linux ];
+      script = ''
         echo "Manual shutdown!"
-        
-        cd /home/kami
-        runuser -l kami -c 'podman ps -q > /home/kami/running'
-        runuser -l kami -c 'podman stop --all --timeout 20'
-
+        ${sharedScript}
         shutdown now
       '';
     };
-  };
-  
-  systemd.services.manual-reboot = {
-    description = "Manual reboot for unplanned maintenance";
-    path = [ pkgs.util-linux ];
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = pkgs.writeShellScript "manual-reboot" ''
-        set -eu
-
-        echo $(date +"%Y-%m-%d %H:%M:%S")
+    systemd.services.manual-reboot = {
+      description = "Manual reboot";
+      serviceConfig.Type = "oneshot";
+      wantedBy = lib.mkForce [];
+      path = [ pkgs.util-linux ];
+      script = ''
         echo "Manual reboot!"
-        
-        cd /home/kami
-        runuser -l kami -c 'podman ps -q > /home/kami/running'
-        runuser -l kami -c 'podman stop --all --timeout 20'
-
+        ${sharedScript}
         shutdown -r now
       '';
     };
-  };
-
+  }
 }
