@@ -1,6 +1,14 @@
 { config, pkgs, ... }: 
 let
   scripts = import ./scripts.nix { inherit pkgs; };
+
+  sharedScript = ''
+      set -eu
+      echo $(date +"%Y-%m-%d %H:%M:%S")      
+      cd /home/kami
+      runuser -l kami -c 'podman ps -q > /home/kami/running'
+      runuser -l kami -c 'podman stop --all --timeout 20'
+    ''
 in {
   # # Automatically start containers should-start-on-boot
   # systemd.services.podman-autostart = {
@@ -181,36 +189,26 @@ in {
     '';
   };
 
-  let
-    sharedScript = ''
-      set -eu
-      echo $(date +"%Y-%m-%d %H:%M:%S")      
-      cd /home/kami
-      runuser -l kami -c 'podman ps -q > /home/kami/running'
-      runuser -l kami -c 'podman stop --all --timeout 20'
-    ''
-  in {
-    systemd.services.manual-shutdown = {
-      description = "Manual shutdown";
-      serviceConfig.Type = "oneshot";
-      wantedBy = lib.mkForce [];
-      path = [ pkgs.util-linux ];
-      script = ''
-        echo "Manual shutdown!"
-        ${sharedScript}
-        shutdown now
-      '';
-    };
-    systemd.services.manual-reboot = {
-      description = "Manual reboot";
-      serviceConfig.Type = "oneshot";
-      wantedBy = lib.mkForce [];
-      path = [ pkgs.util-linux ];
-      script = ''
-        echo "Manual reboot!"
-        ${sharedScript}
-        shutdown -r now
-      '';
-    };
-  }
+  systemd.services.manual-shutdown = {
+    description = "Manual shutdown";
+    serviceConfig.Type = "oneshot";
+    wantedBy = lib.mkForce [];
+    path = [ pkgs.util-linux ];
+    script = ''
+      echo "Manual shutdown!"
+      ${sharedScript}
+      shutdown now
+    '';
+  };
+  systemd.services.manual-reboot = {
+    description = "Manual reboot";
+    serviceConfig.Type = "oneshot";
+    wantedBy = lib.mkForce [];
+    path = [ pkgs.util-linux ];
+    script = ''
+      echo "Manual reboot!"
+      ${sharedScript}
+      shutdown -r now
+    '';
+  };
 }
