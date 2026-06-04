@@ -169,8 +169,8 @@ in {
     '';
   };
 
-  systemd.services.seq-b = {
-    description = "Test sequence 2";
+  systemd.services.seq-c = {
+    description = "Test sequence 3";
     serviceConfig.Type = "oneshot";
     wantedBy = lib.mkForce [];
     path = [ pkgs.coreutils ];
