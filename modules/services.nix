@@ -8,7 +8,7 @@ let
       cd /home/kami
       runuser -l kami -c 'podman ps -q > /home/kami/running'
       runuser -l kami -c 'podman stop --all --timeout 20'
-    ''
+    '';
 in {
   # # Automatically start containers should-start-on-boot
   # systemd.services.podman-autostart = {
