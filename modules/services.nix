@@ -181,7 +181,7 @@ in {
     '';
   };
 
-  let {
+  let
     sharedScript = ''
       set -eu
       echo $(date +"%Y-%m-%d %H:%M:%S")      
@@ -189,7 +189,7 @@ in {
       runuser -l kami -c 'podman ps -q > /home/kami/running'
       runuser -l kami -c 'podman stop --all --timeout 20'
     ''
-  } in {
+  in {
     systemd.services.manual-shutdown = {
       description = "Manual shutdown";
       serviceConfig.Type = "oneshot";
