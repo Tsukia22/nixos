@@ -40,7 +40,7 @@
   systemd.timers.maintenance = {
     wantedBy = [ "timers.target" ];
     timerConfig = {
-      OnCalendar = "04:30";
+      OnCalendar = "04:00";
       Persistent = true;
     };
   };
