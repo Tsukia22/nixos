@@ -1,16 +1,16 @@
 { pkgs }:
 let
-  curl = "${pkgs.curl}/bin/curl";
-  echo = "${pkgs.coreutils}/bin/echo";
+  helper = import ./helper.nix { inherit pkgs; };
 in
 {
-  notifyFail = { message, target }: ''
-    PING_KEY=xfvqwclbw6d3h1pxaaog2w
-    SLUG=$HOSTNAME
-    URL=http://${target}:25558/ping/$PING_KEY/$SLUG?create=1
-    ${curl} -m 5 --retry 2 --data-raw "${message}" $URL
-  '';
-  hello = { message }: ''
-    ${echo} "Hello ${message}"
+  makeExecStopPost = { unit, target }: pkgs.writeShellScript "notify-fail-${unit}" ''
+    if [ "$SERVICE_RESULT" == "success" ]; then
+      MESSAGE="Service finished with: $SERVICE_RESULT"
+      ${helper.notify { message = "$MESSAGE"; target = target; }}
+    else
+      LOGS=$(journalctl -u ${unit}.service -n 20 --no-pager)
+      MESSAGE="Service failed with: $SERVICE_RESULT\n$LOGS"
+      ${helper.notifyFail { message = "$MESSAGE"; target = target; }}
+    fi
   '';
 }

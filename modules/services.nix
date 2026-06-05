@@ -89,23 +89,21 @@ in {
     path = [ pkgs.git pkgs.nix pkgs.nixos-rebuild pkgs.curl ];
     serviceConfig = {
       Type = "oneshot";
-      User = "root";
-      WorkingDirectory = "/root/nixos";
       StandardOutput = "append:/root/update-service.log";
       StandardError = "append:/root/update-service.log";
-      ExecStart = pkgs.writeShellScript "nixos-update" ''
-        set -eu
-        
-        echo $(date +"%Y-%m-%d %H:%M:%S")
-        echo "Updating flake inputs..."
-        nix flake update --flake /root/nixos
-        
-        echo "Rebuilding for next boot..."
-        nixos-rebuild boot --impure --flake /root/nixos#$(hostname)
-        
-        echo "Update complete. Changes will apply on boot."
-      '';
     };
+    script = ''
+      set -eu
+      cd /root/nixos
+      echo $(date +"%Y-%m-%d %H:%M:%S")
+      echo "Updating flake inputs..."
+      nix flake update --flake /root/nixos
+      
+      echo "Rebuilding for next boot..."
+      nixos-rebuild boot --impure --flake /root/nixos#$HOSTNAME
+      
+      echo "Update complete. Changes will apply on boot."
+    '';
 #    unitConfig = {
 #      OnSuccess = "auto-backup.service"; # In the host configuration
 #      OnFailure = "curl http://10.100.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME/fail";
@@ -126,67 +124,15 @@ in {
   };
   
   systemd.services.test-fail = {
-    serviceConfig.Type = "oneshot";
+    description = "Test failed service";
     wantedBy = lib.mkForce [];
-    onFailure = [ "notify-fail.service" ];
-    script = ''exit 1'';
-  };
-
-  systemd.services.notify-fail = {
-    serviceConfig.Type = "oneshot";
-    wantedBy = lib.mkForce [];
-    script = scripts.notifyFail { message = "oh no"; target = "10.100.0.1"; };
-  };
-
-  systemd.services.test-seq = {
-    description = "Test sequence";
-    serviceConfig.Type = "oneshot";
-    wantedBy = lib.mkForce [];
-    script = ''
-      echo "a"
-      systemctl start seq-a
-      echo "b"
-      systemctl start seq-b
-      echo "c"
-      systemctl start seq-c
-      echo "done"
-    '';
-  };
-
-  systemd.services.seq-a = {
-    description = "Test sequence 1";
-    serviceConfig.Type = "oneshot";
-    wantedBy = lib.mkForce [];
-    path = [ pkgs.coreutils ];
-    script = ''
-      echo "1"
-      sleep 4
-      echo "1-4"
-    '';
-  };
-
-  systemd.services.seq-b = {
-    description = "Test sequence 2";
-    serviceConfig.Type = "oneshot";
-    wantedBy = lib.mkForce [];
-    path = [ pkgs.coreutils ];
-    script = ''
-      echo "2"
-      sleep 2
-      echo "2-2"
-    '';
-  };
-
-  systemd.services.seq-c = {
-    description = "Test sequence 3";
-    serviceConfig.Type = "oneshot";
-    wantedBy = lib.mkForce [];
-    path = [ pkgs.coreutils ];
-    script = ''
-      echo "3"
-      sleep 1
-      echo "3-1"
-    '';
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = pkgs.writeShellScript "test-fail" ''
+        exit 1
+      '';
+      ExecStopPost = scripts.makeExecStopPost { unit = "test-fail"; target = "10.100.0.1"; };
+    };
   };
 
   systemd.services.manual-shutdown = {
