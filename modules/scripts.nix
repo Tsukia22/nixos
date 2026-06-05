@@ -31,11 +31,11 @@ let
     UNIT="$1"
     if [ $RESULT == "success" ]; then
       MESSAGE="Service finished with: $SERVICE_RESULT"
-      ${notify { target = target; message = "$MESSAGE"; unit = "$UNIT"; }}
+      ${notify { message = "$MESSAGE"; unit = "$UNIT"; }}
     else
       LOGS=$(${journalctl} -u $UNIT -n 20 --no-pager)
       MESSAGE="$UNIT failed: $SERVICE_RESULT \n $LOGS"
-      ${notifyFail { target = target; message = "$MESSAGE"; unit = "$UNIT"; }}
+      ${notifyFail { message = "$MESSAGE"; unit = "$UNIT"; }}
     fi
   '';
 
