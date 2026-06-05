@@ -5,6 +5,7 @@ let
   curl = "${pkgs.curl}/bin/curl";
   echo = "${pkgs.coreutils}/bin/echo";
   runuser = "${pkgs.util-linux}/bin/runuser";
+  journalctl = "${pkgs.systemd}/bin/journalctl";
   #sleep = "${pkgs.coreutils}/bin/sleep";
 
   ### Constants
@@ -39,14 +40,14 @@ let
   '';
 
   ### Main functions
-  
-  makeExecStopPost = { unit, target }: pkgs.writeShellScript "notify-${unit}" ''
-    if [ "$SERVICE_RESULT" == "success" ]; then
-      MESSAGE="Service finished with: $SERVICE_RESULT"
+  $SERVICE_RESULT
+  makeExecStopPost = { target, unit, result }: pkgs.writeShellScript "notify-${unit}" ''
+    if [ ${result} == "success" ]; then
+      MESSAGE="Service finished with: ${result}"
       ${notify { target = target; message = "$MESSAGE"; unit = unit; }}
     else
-      LOGS=$(journalctl -u ${unit}.service -n 20 --no-pager)
-      MESSAGE="Service failed with: $SERVICE_RESULT\n$LOGS"
+      LOGS=$(${journalctl} -u ${unit}.service -n 20 --no-pager)
+      MESSAGE="${unit} failed: ${result} \n $LOGS"
       ${notifyFail { target = target; message = "$MESSAGE"; unit = unit; }}
     fi
   '';
