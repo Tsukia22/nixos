@@ -65,7 +65,7 @@ in {
       StandardError = "append:/home/kami/maintenance-service.log";
       ExecStart =  pkgs.writeShellScript "maintenance" ''
         # Start maintenance, send notification
-        ${scripts.notifyPingStart}
+        ${scripts.notifyPingStart { target = config.host.notify-target; unit = "%p"; }}
 
         # Write container references to running and stop containers
         ${scripts.writeRunningStopContainers}
