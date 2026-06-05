@@ -40,7 +40,7 @@ let
   '';
 
   ### Main functions
-  $SERVICE_RESULT
+  
   makeExecStopPost = { target, unit, result }: pkgs.writeShellScript "notify-${unit}" ''
     if [ ${result} == "success" ]; then
       MESSAGE="Service finished with: ${result}"
