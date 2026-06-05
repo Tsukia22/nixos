@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }: 
 let
-  scripts = import ./scripts.nix { inherit pkgs; };
+  scripts = import ./scripts.nix { inherit config pkgs; };
 in {
   
   systemd.services.test-fail = {
