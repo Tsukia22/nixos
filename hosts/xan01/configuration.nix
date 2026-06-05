@@ -52,5 +52,12 @@
   networking.wg-quick.interfaces.wg-mesh.address = [ "10.100.0.1/24" ];
   networking.wg-quick.interfaces.wg-net.address = [ "10.200.0.1/24" ];
 
+  # Host options/configs
+  # Example: ${config.host.domain}
+  host.domain = "x.x";
+  host.backup-target = "10.100.0.2";
+  host.notify-target = "10.100.0.1";
+  # TODO: self reference, replace with a control plane
+
   system.stateVersion = "25.05";
 }
