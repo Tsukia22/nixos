@@ -10,6 +10,7 @@
     ../../modules/wg-mesh.nix
     ../../modules/wg-net.nix
     ../../modules/dnsmasq.nix
+    ../../modules/host-options.nix
     ./firewall.nix
     ./backup.nix
   ];
