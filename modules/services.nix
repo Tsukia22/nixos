@@ -11,7 +11,7 @@ in {
       ExecStart = pkgs.writeShellScript "test-fail" ''
         exit 1
       '';
-      ExecStopPost = "${scripts.makeExecStopPost { target = config.host.notify-target; unit = "%p"; result = "$SERVICE_RESULT"; }}";
+      ExecStopPost = "${scripts.notifyOnStop { target = config.host.notify-target; }} %p $SERVICE_RESULT";
     };
   };
 
@@ -29,7 +29,7 @@ in {
         ${scripts.restartContainersInRunning}
         ${scripts.notifyPing { target = config.host.notify-target; unit = "podman-restart"; }}
       '';
-      ExecStopPost = "${scripts.makeExecStopPost { target = config.host.notify-target; unit = "%p"; result = "$SERVICE_RESULT"; }}";
+      ExecStopPost = "${scripts.notifyOnStop} %p";
     };
   };
   
@@ -52,7 +52,7 @@ in {
         nixos-rebuild boot --impure --flake /root/nixos#$HOSTNAME
         echo "Update complete. Changes will apply on boot."
       '';
-      ExecStopPost = "${scripts.makeExecStopPost { target = config.host.notify-target; unit = "%p"; result = "$SERVICE_RESULT"; }}";
+      ExecStopPost = "${scripts.notifyOnStop { unit = "%p"; result = "$SERVICE_RESULT"; }}";
     };
   };
   
@@ -83,7 +83,7 @@ in {
         echo "Rebooting..."
         shutdown -r now
       '';
-      ExecStopPost = "${scripts.makeExecStopPost { target = config.host.notify-target; unit = "%p"; result = "$SERVICE_RESULT"; }}";
+      ExecStopPost = "${scripts.notifyOnStop { unit = "%p"; result = "$SERVICE_RESULT"; }}";
     };
   };
 }

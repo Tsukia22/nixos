@@ -11,7 +11,6 @@ let
   ### Constants
 
   ping-key = "xfvqwclbw6d3h1pxaaog2w";
-  slug_prefix = "$HOSTNAME";
   
   ### Helper functions
 
@@ -19,36 +18,24 @@ let
 
   dateTime = ''${echo} $(date +"%Y-%m-%d %H:%M:%S")'';
 
-  notify = { target, message, unit }: ''
-    URL=http://${target}:25558/ping/${ping-key}/${slug_prefix}?create=1
-    ${curl} -m 5 --retry 2 --data-raw "${message}" $URL
-  '';
+  url = { unit, suffix }: "http://${config.host.notify-target}:25558/ping/${ping-key}/"$HOSTNAME"${if unit != "" then "-${unit}" else ""}${suffix}?create=1";
 
-  notifyFail = { target, message, unit }: ''
-    URL=http://${target}:25558/ping/${ping-key}/${slug_prefix}/fail?create=1
-    ${curl} -m 5 --retry 2 --data-raw "${message}" $URL
-  '';
-
-  notifyPingStart = { target, unit }: ''
-    URL=http://${target}:25558/ping/${ping-key}/${slug_prefix}-${unit}/start?create=1
-    ${curl} -m 5 --retry 2 $URL
-  '';
-
-  notifyPing = { target, unit }: ''
-    URL=http://${target}:25558/ping/${ping-key}/${slug_prefix}-${unit}?create=1
-    ${curl} -m 5 --retry 2 $URL
-  '';
+  notify = { message, unit }: '' ${curl} -m 5 --retry 2 --data-raw "${message}" ${url { unit = unit; suffix = "" }} '';
+  notifyFail = { message, unit }: '' ${curl} -m 5 --retry 2 --data-raw "${message}" ${url { unit = unit; suffix = "/fail" }} '';
+  notifyPingStart = { unit }: '' ${curl} -m 5 --retry 2 ${url { unit = unit; suffix = "/start" }} '';
+  notifyPing = { unit }: '' ${curl} -m 5 --retry 2 ${url { unit = unit; suffix = "" }} '';
 
   ### Main functions
-  
-  makeExecStopPost = { target, unit, result }: pkgs.writeShellScript "notify-${unit}" ''
-    if [ ${result} == "success" ]; then
-      MESSAGE="Service finished with: ${result}"
-      ${notify { target = target; message = "$MESSAGE"; unit = unit; }}
+
+  notifyOnStop = pkgs.writeShellScript "notifyOnStop" ''
+    UNIT="$1"
+    if [ $RESULT == "success" ]; then
+      MESSAGE="Service finished with: $SERVICE_RESULT"
+      ${notify { target = target; message = "$MESSAGE"; unit = "$UNIT"; }}
     else
-      LOGS=$(${journalctl} -u ${unit}.service -n 20 --no-pager)
-      MESSAGE="${unit} failed: ${result} \n $LOGS"
-      ${notifyFail { target = target; message = "$MESSAGE"; unit = unit; }}
+      LOGS=$(${journalctl} -u $UNIT -n 20 --no-pager)
+      MESSAGE="$UNIT failed: $SERVICE_RESULT \n $LOGS"
+      ${notifyFail { target = target; message = "$MESSAGE"; unit = "$UNIT"; }}
     fi
   '';
 
@@ -90,6 +77,6 @@ let
   '';
 in
 {
-  inherit dateTime notify notifyPing notifyPingStart makeExecStopPost writeRunningStopContainers restartContainersInRunning;
+  inherit dateTime notify notifyPing notifyPingStart notifyOnStop writeRunningStopContainers restartContainersInRunning;
   environment.systemPackages = [ manual-shutdown manual-reboot ];
 }
