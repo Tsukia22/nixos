@@ -1,127 +1,7 @@
 { config, lib, pkgs, ... }: 
 let
   scripts = import ./scripts.nix { inherit pkgs; };
-
-  sharedScript = ''
-      set -eu
-      echo $(date +"%Y-%m-%d %H:%M:%S")      
-      cd /home/kami
-      runuser -l kami -c 'podman ps -q > /home/kami/running'
-      runuser -l kami -c 'podman stop --all --timeout 20'
-    '';
 in {
-  # # Automatically start containers should-start-on-boot
-  # systemd.services.podman-autostart = {
-  #   enable = true;
-  #   after = [ "podman.service" ];
-  #   wantedBy = [ "multi-user.target" ];
-  #   description = "Automatically start containers should-start-on-boot";
-  #   serviceConfig = {
-  #     Type = "idle";
-  #     User = "kami";
-  #     ExecStartPre = ''${pkgs.coreutils}/bin/sleep 1'';
-  #     ExecStart = ''/run/current-system/sw/bin/podman restart --all --filter should-start-on-boot=true'';
-  #   };
-  # };
-
-  systemd.services.podman-restart = {
-    after = [ "podman.service" ];
-    wantedBy = [ "multi-user.target" ];
-    description = "Automatically restart containers";
-    path = [ pkgs.coreutils pkgs.findutils pkgs.podman pkgs.curl ];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;  # Service stays "active" after running once
-      User = "kami";
-      StandardOutput = "append:/home/kami/podman-restart-service.log";
-      StandardError = "append:/home/kami/podman-restart-service.log";
-      ExecStart = pkgs.writeShellScript "podman-restart" ''
-        set -eu
-        
-        echo $(date +"%Y-%m-%d %H:%M:%S")
-        echo "Starting containers..."
-        
-        xargs -r -n 1 podman restart < /home/kami/running
-        
-        echo "Done starting containers."
-        echo "Waiting 5 seconds to send health ping"
-
-        sleep 5
-        curl http://10.100.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME
-      '';
-    };
-#    unitConfig = {
-#      OnFailure = "curl http://10.100.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME/fail";
-#    };
-  };
-  
-  systemd.services.maintenance = {
-    description = "Maintenance";
-    wantedBy = lib.mkForce [];
-    path = [ pkgs.coreutils pkgs.bash pkgs.podman pkgs.curl ];
-    serviceConfig = {
-      Type = "oneshot";
-      User = "kami";
-      StandardOutput = "append:/home/kami/maintenance-service.log";
-      StandardError = "append:/home/kami/maintenance-service.log";
-      ExecStart = pkgs.writeShellScript "maintenance" ''
-        set -eu
-        
-        echo $(date +"%Y-%m-%d %H:%M:%S")
-        echo "Starting maintenance..."
-
-        curl http://10.100.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME/start
-        
-        bash -c 'podman ps -q > /home/kami/running && podman stop --all --timeout 60'
-        
-        echo "Done running maintenance."
-      '';
-    };
-#    unitConfig = {
-#      OnSuccess = "auto-update.service";
-#      OnFailure = "curl http://10.100.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME/fail";
-#    };
-  };
-
-  systemd.services.auto-update = {
-    description = "NixOS Flake auto update";
-    wantedBy = lib.mkForce [];
-    path = [ pkgs.git pkgs.nix pkgs.nixos-rebuild pkgs.curl ];
-    serviceConfig = {
-      Type = "oneshot";
-      StandardOutput = "append:/root/update-service.log";
-      StandardError = "append:/root/update-service.log";
-    };
-    script = ''
-      set -eu
-      cd /root/nixos
-      echo $(date +"%Y-%m-%d %H:%M:%S")
-      echo "Updating flake inputs..."
-      nix flake update --flake /root/nixos
-      
-      echo "Rebuilding for next boot..."
-      nixos-rebuild boot --impure --flake /root/nixos#$HOSTNAME
-      
-      echo "Update complete. Changes will apply on boot."
-    '';
-#    unitConfig = {
-#      OnSuccess = "auto-backup.service"; # In the host configuration
-#      OnFailure = "curl http://10.100.0.1:25558/ping/xfvqwclbw6d3h1pxaaog2w/maintenance-$HOSTNAME/fail";
-#    };
-  };
-  
-  systemd.services.reboot-after-maintenance = {
-    description = "Reboot after maintenance";
-    serviceConfig.Type = "oneshot";
-    wantedBy = lib.mkForce [];
-    path = [ pkgs.coreutils pkgs.curl ];
-    script = ''
-      set -eu
-      echo $(date +"%Y-%m-%d %H:%M:%S")
-      echo "Rebooting..."
-      reboot
-    '';
-  };
   
   systemd.services.test-fail = {
     description = "Test failed service";
@@ -131,30 +11,79 @@ in {
       ExecStart = pkgs.writeShellScript "test-fail" ''
         exit 1
       '';
-      ExecStopPost = scripts.makeExecStopPost { unit = "test-fail"; target = "10.100.0.1"; };
+      ExecStopPost = "${scripts.makeExecStopPost { target = config.host.notify-target; unit = "%p"; }}";
     };
   };
 
-  systemd.services.manual-shutdown = {
-    description = "Manual shutdown";
-    serviceConfig.Type = "oneshot";
-    wantedBy = lib.mkForce [];
-    path = [ pkgs.util-linux ];
-    script = ''
-      echo "Manual shutdown!"
-      ${sharedScript}
-      shutdown now
-    '';
+  systemd.services.podman-restart = {
+    after = [ "podman.service" ];
+    wantedBy = [ "multi-user.target" ];
+    description = "Automatically restart containers on boot";
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;  # Service stays "active" after running once, to prevent re-running.
+      User = "kami";  # Ensure log ownership
+      StandardOutput = "append:/home/kami/podman-restart-service.log";
+      StandardError = "append:/home/kami/podman-restart-service.log";
+      ExecStart = pkgs.writeShellScript "podman-restart" ''
+        ${scripts.restartContainersInRunning}
+        ${scripts.notifyPing { target = ${config.host.notify-target}; unit = "podman-restart"; }}
+      '';
+      ExecStopPost = "${scripts.makeExecStopPost { target = config.host.notify-target; unit = "%p"; }}";
+    };
   };
-  systemd.services.manual-reboot = {
-    description = "Manual reboot";
-    serviceConfig.Type = "oneshot";
+  
+  systemd.services.update-nix = {
+    description = "NixOS flake update and rebuild";
     wantedBy = lib.mkForce [];
-    path = [ pkgs.util-linux ];
-    script = ''
-      echo "Manual reboot!"
-      ${sharedScript}
-      shutdown -r now
-    '';
+    path = [ pkgs.git pkgs.nix pkgs.nixos-rebuild pkgs.curl ];
+    serviceConfig = {
+      Type = "oneshot";
+      StandardOutput = "append:/root/update-nix-service.log";
+      StandardError = "append:/root/update-nix-service.log";
+      ExecStart = pkgs.writeShellScript "podman-restart" ''
+        set -eu
+        ${scripts.dateTime}
+        
+        echo "Updating flake inputs..."
+        nix flake update --flake /root/nixos
+        
+        echo "Rebuilding for next boot..."
+        nixos-rebuild boot --impure --flake /root/nixos#$HOSTNAME
+        echo "Update complete. Changes will apply on boot."
+      '';
+      ExecStopPost = "${scripts.makeExecStopPost { target = config.host.notify-target; unit = "%p"; }}";
+    };
+  };
+  
+  systemd.services.maintenance = {
+    description = "Maintenance";
+    wantedBy = lib.mkForce [];
+    serviceConfig = {
+      Type = "oneshot";
+      StandardOutput = "append:/home/kami/maintenance-service.log";
+      StandardError = "append:/home/kami/maintenance-service.log";
+      ExecStart =  pkgs.writeShellScript "maintenance" ''
+        # Start maintenance, send notification
+        ${scripts.maintenanceStartPing}
+
+        # Write container references to running and stop containers
+        ${scripts.writeRunningStopContainers}
+
+        # auto-backup.service host config
+        # skip for now, testing... #systemctl start auto-backup.service
+
+        # Update NixOS
+        systemctl start update-nix.service
+
+        # OnSuccess notify healthchecks
+        ${scripts.notify { target = ${config.host.notify-target}; message = "success"; unit = "%p"; }}
+
+        # Reboot
+        echo "Rebooting..."
+        shutdown -r now
+      '';
+      ExecStopPost = "${scripts.makeExecStopPost { target = config.host.notify-target; unit = "%p"; }}";
+    };
   };
 }
