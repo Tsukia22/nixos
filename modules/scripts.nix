@@ -89,6 +89,6 @@ let
   '';
 in
 {
-  inherit dateTime notify notifyPing notifyPingStart makeExecStopPost writeRunningStopContainers restartContainersInRunning
+  inherit dateTime notify notifyPing notifyPingStart makeExecStopPost writeRunningStopContainers restartContainersInRunning;
   environment.systemPackages = [ manual-shutdown manual-reboot ];
 }
