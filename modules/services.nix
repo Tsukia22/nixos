@@ -27,7 +27,7 @@ in {
       StandardError = "append:/home/kami/podman-restart-service.log";
       ExecStart = pkgs.writeShellScript "podman-restart" ''
         ${scripts.restartContainersInRunning}
-        ${scripts.notifyPing { target = config.host.notify-target; unit = "podman-restart"; }}
+        ${scripts.notifyPing { unit = "podman-restart"; }}
       '';
       ExecStopPost = "${scripts.notifyOnStop} %p";
     };
@@ -65,7 +65,7 @@ in {
       StandardError = "append:/home/kami/maintenance-service.log";
       ExecStart =  pkgs.writeShellScript "maintenance" ''
         # Start maintenance, send notification
-        ${scripts.notifyPingStart { target = config.host.notify-target; unit = "%p"; }}
+        ${scripts.notifyPingStart { unit = "%p"; }}
 
         # Write container references to running and stop containers
         ${scripts.writeRunningStopContainers}
@@ -77,7 +77,7 @@ in {
         systemctl start update-nix.service
 
         # OnSuccess notify healthchecks
-        ${scripts.notify { target = config.host.notify-target; message = "success"; unit = "%p"; }}
+        ${scripts.notify { message = "success"; unit = "%p"; }}
 
         # Reboot
         echo "Rebooting..."
