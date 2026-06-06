@@ -67,6 +67,8 @@ in {
       StandardOutput = "append:/home/kami/maintenance-service.log";
       StandardError = "append:/home/kami/maintenance-service.log";
       ExecStart =  pkgs.writeShellScript "maintenance" ''
+        set -eux  # exit on error, print every command before executing
+
         # Start maintenance, send notification
         ${scripts.notifyStart { unit = "maintenance"; }}
         echo "1"
