@@ -78,7 +78,7 @@ let
 
   check-url = ''
     ${echo} ${url { unit = "check-url"; suffix = "suffix"; }}
-  ''
+  '';
 in
 {
   inherit dateTime notify notifyPing notifyPingStart notifyOnStop writeRunningStopContainers restartContainersInRunning;
