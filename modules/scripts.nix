@@ -29,7 +29,7 @@ let
 
   notifyOnStop = { unit }: pkgs.writeShellScript "notifyOnStop-${unit}" ''
     if [ "$SERVICE_RESULT" == "success" ]; then
-      ${notify { unit = unit; }}
+      ${notifyPing { unit = unit; }}
     else
       ${notifyFail { unit = unit; }}
     fi
