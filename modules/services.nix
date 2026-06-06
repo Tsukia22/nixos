@@ -24,7 +24,8 @@ in {
       Type = "oneshot";
       ExecStart = pkgs.writeShellScript "on-boot" ''
         # Services to start on boot
-        systemctl start podman-restart
+        # systemctl start podman-restart
+        ${scripts.notifyPing { unit = "boot"; }}
       '';
     };
   };
