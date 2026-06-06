@@ -58,7 +58,7 @@
   host.domain = "x.x";
   host.backup-target = "10.100.0.2";
   host.notify-target = "10.100.0.2";
-  host.notify-key = "0506a5a8-a7ef-4bcd-9b16-da0c3dad9295";
+  host.notify-key = "3sl7poangptq1mtladsioa";
 
   system.stateVersion = "25.05";
 }
