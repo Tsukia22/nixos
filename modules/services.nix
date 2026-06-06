@@ -20,6 +20,8 @@ in {
     after = [ "podman.service" ];
     wantedBy = [ "multi-user.target" ];
     description = "Automatically restart containers on boot";
+    stopIfChanged = false;
+    restartIfChanged = false;
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;  # Service stays "active" after running once, to prevent re-running.
