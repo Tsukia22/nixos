@@ -67,7 +67,7 @@ cd /home
       StandardError = "append:/home/kami/maintenance-service.log";
       ExecStart =  pkgs.writeShellScript "maintenance" ''
         # Start maintenance, send notification
-        ${scripts.notifyPingStart { unit = "%p"; }}
+        ${scripts.notifyStart { unit = "maintenance"; }}
 
         # Write container references to running and stop containers
         ${scripts.writeRunningStopContainers}
@@ -78,8 +78,8 @@ cd /home
         # Update NixOS
         systemctl start update-nix.service
 
-        # OnSuccess notify healthchecks
-        ${scripts.notify { message = "success"; unit = "%p"; }}
+        # OnSuccess notify healthchecks, ExecStopPost is not called here unless it fails
+        ${scripts.notifyPing { unit = "maintenance"; }}
 
         # Reboot
         echo "Rebooting..."
