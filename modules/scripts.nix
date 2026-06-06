@@ -29,7 +29,7 @@ let
 
   notifyOnStop = pkgs.writeShellScript "notifyOnStop" ''
     UNIT="$1"
-    if [ $RESULT == "success" ]; then
+    if [ "$SERVICE_RESULT" == "success" ]; then
       MESSAGE="Service finished with: $SERVICE_RESULT"
       ${notify { message = "$MESSAGE"; unit = "$UNIT"; }}
     else
