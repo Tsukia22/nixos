@@ -17,7 +17,7 @@ in {
   };
 
   systemd.services.on-boot = {
-    after = [ "podman.service" "wg-quick-wg-mesh" ];
+    after = [ "podman.service" "wg-quick-wg-mesh.service" ];
     wantedBy = [ "multi-user.target" ];
     description = "Run on boot";
     serviceConfig = {
@@ -25,7 +25,7 @@ in {
       ExecStart = pkgs.writeShellScript "on-boot" ''
         # Booting
         ${scripts.notifyPing { unit = "boot"; }}
-        
+
         # Services to start on boot
         systemctl start podman-restart
 
