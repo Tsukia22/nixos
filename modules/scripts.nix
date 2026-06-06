@@ -75,5 +75,5 @@ let
   '';
 in
 {
-  inherit dateTime notify notifyPing notifyStart notifyFail notifyOnStop writeRunningStopContainers restartContainersInRunning manual-shutdown manual-reboot;
+  inherit dateTime notify notifyPing notifyStart notifyFail notifyOnStop writeRunningStopContainers restartContainersInRunning manual-shutdown manual-reboot check-url;
 }
