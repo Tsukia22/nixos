@@ -27,8 +27,9 @@ in {
       StandardOutput = "append:/home/kami/podman-restart-service.log";
       StandardError = "append:/home/kami/podman-restart-service.log";
       ExecStart = pkgs.writeShellScript "podman-restart" ''
-#        ${scripts.notifyStart { unit = "podman-restart"; }}
-#        ${scripts.restartContainersInRunning}
+        ${scripts.notifyPing { unit = "reboot"; }}
+        ${scripts.notifyStart { unit = "podman-restart"; }}
+        ${scripts.restartContainersInRunning}
         ${scripts.notifyPing { unit = "podman-restart"; }}
       '';
       ExecStopPost = "${scripts.notifyOnStop { unit = "podman-restart"; }}";
@@ -71,25 +72,19 @@ in {
 
         # Start maintenance, send notification
         ${scripts.notifyStart { unit = "maintenance"; }}
-        echo "1"
 
         # Write container references to running and stop containers
         ${scripts.writeRunningStopContainers}
-        echo "2"
 
         # auto-backup.service host config
         # skip for now, testing... #systemctl start auto-backup.service
 
         # Update NixOS
         systemctl start update-nix.service
-        echo "3"
-
-        # OnSuccess notify healthchecks, ExecStopPost is not called here unless it fails
-        ${scripts.notifyPing { unit = "maintenance"; }}
-        echo "4"
 
         # Reboot
-        shutdown -r now
+        ${scripts.notifyStart { unit = "reboot"; }}
+        shutdown -r
       '';
       ExecStopPost = "${scripts.notifyOnStop { unit = "maintenance"; }}";
     };
