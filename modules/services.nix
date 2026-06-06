@@ -26,8 +26,9 @@ in {
       StandardOutput = "append:/home/kami/podman-restart-service.log";
       StandardError = "append:/home/kami/podman-restart-service.log";
       ExecStart = pkgs.writeShellScript "podman-restart" ''
-        ${scripts.restartContainersInRunning}
-        ${scripts.notifyPing { unit = "podman-restart"; }}
+#        ${scripts.restartContainersInRunning}
+#        ${scripts.notifyPing { unit = "podman-restart"; }}
+cd /home
       '';
       ExecStopPost = "${scripts.notifyOnStop} %p";
     };
