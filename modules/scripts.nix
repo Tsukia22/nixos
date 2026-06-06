@@ -75,8 +75,12 @@ let
     ${writeRunningStopContainers}
     shutdown -r now
   '';
+
+  check-url = ''
+    ${echo} ${url { unit = "check-url"; suffix = "suffix"; }}
+  ''
 in
 {
   inherit dateTime notify notifyPing notifyPingStart notifyOnStop writeRunningStopContainers restartContainersInRunning;
-  environment.systemPackages = [ manual-shutdown manual-reboot ];
+  environment.systemPackages = [ manual-shutdown manual-reboot check-url ];
 }
