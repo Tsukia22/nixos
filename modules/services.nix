@@ -25,7 +25,7 @@ in {
       ExecStart = pkgs.writeShellScript "on-boot" ''
         # Services to start on boot
         systemctl start podman-restart
-      ''
+      '';
     };
   };
 
