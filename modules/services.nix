@@ -38,7 +38,7 @@ in {
   systemd.services.update-nix = {
     description = "NixOS flake update and rebuild";
     wantedBy = lib.mkForce [];
-    path = [ pkgs.git pkgs.nix pkgs.nixos-rebuild pkgs.curl ];
+    path = [ pkgs.coreutils pkgs.git pkgs.nix pkgs.nixos-rebuild pkgs.curl ];
     serviceConfig = {
       Type = "oneshot";
       StandardOutput = "append:/root/update-nix-service.log";
@@ -82,7 +82,6 @@ in {
         ${scripts.notifyPing { unit = "maintenance"; }}
 
         # Reboot
-        echo "Rebooting..."
         shutdown -r now
       '';
       ExecStopPost = "${scripts.notifyOnStop { unit = "maintenance"; }}";
