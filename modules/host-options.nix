@@ -14,5 +14,9 @@
       type = lib.types.str;
       description = "The notification target IP or domain";
     };
+    notify-key = lib.mkOption {
+      type = lib.types.str;
+      description = "The notification identifier";
+    };
   };
 }

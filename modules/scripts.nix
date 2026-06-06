@@ -7,10 +7,6 @@ let
   runuser = "${pkgs.util-linux}/bin/runuser";
   journalctl = "${pkgs.systemd}/bin/journalctl";
   #sleep = "${pkgs.coreutils}/bin/sleep";
-
-  ### Constants
-
-  ping-key = "xfvqwclbw6d3h1pxaaog2w";
   
   ### Helper functions
 
@@ -18,7 +14,7 @@ let
 
   dateTime = ''${echo} $(date +"%Y-%m-%d %H:%M:%S")'';
 
-  url = { unit, suffix }: ''http://${config.host.notify-target}:25558/ping/${ping-key}/"$HOSTNAME"${if unit != "" then "-${unit}" else ""}${suffix}?create=1'';
+  url = { unit, suffix }: ''http://${config.host.notify-target}:25558/ping/${config.host.notify-key}/"$HOSTNAME"${if unit != "" then "-${unit}" else ""}${suffix}?create=1'';
   # TODO: temp retry 0
   notify = { unit, suffix }: ''${curl} -m 5 --retry 0 ${url { unit = unit; suffix = suffix; }}'';
   notifyPing = { unit }: ''${notify { unit = unit; suffix = ""; }}'';

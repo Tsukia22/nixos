@@ -57,8 +57,8 @@
   # Example: ${config.host.domain}
   host.domain = "x.x";
   host.backup-target = "10.100.0.2";
-  host.notify-target = "10.100.0.1";
-  # TODO: self reference, replace with a control plane
+  host.notify-target = "10.100.0.2";
+  host.notify-key = "0803560e-5f8a-44f9-8197-d422656f941f";
 
   system.stateVersion = "25.05";
 }
