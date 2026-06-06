@@ -2,6 +2,7 @@
 let
   scripts = import ./scripts.nix { inherit config pkgs; };
 in {
+  environment.systemPackages = [ scripts.manual-shutdown scripts.manual-reboot scripts.check-url ];
   
   systemd.services.test-fail = {
     description = "Test failed service";
