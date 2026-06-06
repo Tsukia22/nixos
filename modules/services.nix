@@ -2,7 +2,7 @@
 let
   scripts = import ./scripts.nix { inherit config pkgs; };
 in {
-  environment.systemPackages = [ scripts.manual-shutdown scripts.manual-reboot scripts.check-url ];
+  environment.systemPackages = [ scripts.manual-shutdown scripts.manual-reboot ];
   
   systemd.services.test-fail = {
     description = "Test failed service";
@@ -27,9 +27,9 @@ in {
       StandardOutput = "append:/home/kami/podman-restart-service.log";
       StandardError = "append:/home/kami/podman-restart-service.log";
       ExecStart = pkgs.writeShellScript "podman-restart" ''
-#        ${scripts.restartContainersInRunning}
-#        ${scripts.notifyPing { unit = "podman-restart"; }}
-cd /home
+        ${scripts.notifyStart { unit = "podman-restart"; }}
+        ${scripts.restartContainersInRunning}
+        ${scripts.notifyPing { unit = "podman-restart"; }}
       '';
       ExecStopPost = "${scripts.notifyOnStop { unit = "podman-restart"; }}";
     };

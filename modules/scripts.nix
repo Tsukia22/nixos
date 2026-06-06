@@ -72,10 +72,12 @@ let
     shutdown -r now
   '';
 
+  ### For testing
+
   check-url = pkgs.writeShellScriptBin "check-url" ''
     ${echo} ${url { unit = "check-url"; suffix = "suffix"; }}
   '';
 in
 {
-  inherit dateTime notify notifyPing notifyStart notifyFail notifyOnStop writeRunningStopContainers restartContainersInRunning manual-shutdown manual-reboot check-url;
+  inherit dateTime notify notifyPing notifyStart notifyFail notifyOnStop writeRunningStopContainers restartContainersInRunning manual-shutdown manual-reboot;
 }
