@@ -35,7 +35,6 @@ in {
     wantedBy = lib.mkForce [];
     serviceConfig = {
       Type = "oneshot";
-      User = "kami";  # Ensure log ownership
       StandardOutput = "append:/home/kami/podman-restart-service.log";
       StandardError = "append:/home/kami/podman-restart-service.log";
       ExecStart = pkgs.writeShellScript "podman-restart" ''
