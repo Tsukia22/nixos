@@ -76,7 +76,7 @@ let
     shutdown -r now
   '';
 
-  check-url = ''
+  check-url = pkgs.writeShellScriptBin "check-url" ''
     ${echo} ${url { unit = "check-url"; suffix = "suffix"; }}
   '';
 in
