@@ -17,15 +17,20 @@ in {
   };
 
   systemd.services.on-boot = {
-    after = [ "podman.service" ];
+    after = [ "podman.service" "wg-quick-wg-mesh" ];
     wantedBy = [ "multi-user.target" ];
     description = "Run on boot";
     serviceConfig = {
       Type = "oneshot";
       ExecStart = pkgs.writeShellScript "on-boot" ''
-        # Services to start on boot
-        # systemctl start podman-restart
+        # Booting
         ${scripts.notifyPing { unit = "boot"; }}
+        
+        # Services to start on boot
+        systemctl start podman-restart
+
+        # Done rebooting
+        ${scripts.notifyPing { unit = "reboot"; }}
       '';
     };
   };
@@ -41,7 +46,6 @@ in {
         ${scripts.notifyStart { unit = "podman-restart"; }}
         ${scripts.restartContainersInRunning}
         ${scripts.notifyPing { unit = "podman-restart"; }}
-        ${scripts.notifyPing { unit = "reboot"; }}
       '';
       ExecStopPost = "${scripts.notifyOnStop { unit = "podman-restart"; }}";
     };
