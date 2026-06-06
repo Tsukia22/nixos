@@ -2,7 +2,7 @@
 let
   scripts = import ./scripts.nix { inherit config pkgs; };
 in {
-  environment.systemPackages = [ scripts.manual-shutdown scripts.manual-reboot scripts.check-url ];
+  environment.systemPackages = [ scripts.manual-shutdown scripts.manual-reboot scripts.manual-stop-containers scripts.check-url ];
   
   systemd.services.test-fail = {
     description = "Test failed service";
@@ -16,15 +16,24 @@ in {
     };
   };
 
-  systemd.services.podman-restart = {
+  systemd.services.on-boot = {
     after = [ "podman.service" ];
     wantedBy = [ "multi-user.target" ];
-    description = "Automatically restart containers on boot";
-    stopIfChanged = false;
-    restartIfChanged = false;
+    description = "Run on boot";
     serviceConfig = {
       Type = "oneshot";
-      RemainAfterExit = true;  # Service stays "active" after running once, to prevent re-running.
+      ExecStart = pkgs.writeShellScript "on-boot" ''
+        # Services to start on boot
+        systemctl start podman-restart
+      ''
+    };
+  };
+
+  systemd.services.podman-restart = {
+    description = "Restart containers in running";
+    wantedBy = lib.mkForce [];
+    serviceConfig = {
+      Type = "oneshot";
       User = "kami";  # Ensure log ownership
       StandardOutput = "append:/home/kami/podman-restart-service.log";
       StandardError = "append:/home/kami/podman-restart-service.log";
