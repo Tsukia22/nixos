@@ -27,15 +27,14 @@ let
 
   ### Main functions
 
-  notifyOnStop = pkgs.writeShellScript "notifyOnStop" ''
-    UNIT="$1"
+  notifyOnStop = { unit }: pkgs.writeShellScript "notifyOnStop-${unit}" ''
     if [ "$SERVICE_RESULT" == "success" ]; then
       MESSAGE="Service finished with: $SERVICE_RESULT"
-      ${notify { message = "$MESSAGE"; unit = "$UNIT"; }}
+      ${notify { message = "$MESSAGE"; unit = unit; }}
     else
-      LOGS=$(${journalctl} -u $UNIT -n 20 --no-pager)
-      MESSAGE="$UNIT failed: $SERVICE_RESULT \n $LOGS"
-      ${notifyFail { message = "$MESSAGE"; unit = "$UNIT"; }}
+      LOGS=$(${journalctl} -u ${unit} -n 20 --no-pager)
+      MESSAGE="${unit} failed: $SERVICE_RESULT \n $LOGS"
+      ${notifyFail { message = "$MESSAGE"; unit = unit; }}
     fi
   '';
 
