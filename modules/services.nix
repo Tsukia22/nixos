@@ -12,7 +12,7 @@ in {
       ExecStart = pkgs.writeShellScript "test-fail" ''
         exit 1
       '';
-      ExecStopPost = "${scripts.notifyOnStop} %p";
+      ExecStopPost = "${scripts.notifyOnStop { unit = "test-fail"; }}";
     };
   };
 
@@ -31,7 +31,7 @@ in {
 #        ${scripts.notifyPing { unit = "podman-restart"; }}
 cd /home
       '';
-      ExecStopPost = "${scripts.notifyOnStop} %p";
+      ExecStopPost = "${scripts.notifyOnStop { unit = "test-fail"; }}";
     };
   };
   
@@ -54,7 +54,7 @@ cd /home
         nixos-rebuild boot --impure --flake /root/nixos#$HOSTNAME
         echo "Update complete. Changes will apply on boot."
       '';
-      ExecStopPost = "${scripts.notifyOnStop} %p";
+      ExecStopPost = "${scripts.notifyOnStop { unit = "test-fail"; }}";
     };
   };
   
@@ -85,7 +85,7 @@ cd /home
         echo "Rebooting..."
         shutdown -r now
       '';
-      ExecStopPost = "${scripts.notifyOnStop} %p";
+      ExecStopPost = "${scripts.notifyOnStop { unit = "test-fail"; }}";
     };
   };
 }
