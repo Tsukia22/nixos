@@ -20,21 +20,18 @@ let
 
   url = { unit, suffix }: ''http://${config.host.notify-target}:25558/ping/${ping-key}/"$HOSTNAME"${if unit != "" then "-${unit}" else ""}${suffix}?create=1'';
   # TODO: temp retry 0
-  notify = { message, unit }: ''${curl} -m 5 --retry 0 --data-raw ${message} ${url { unit = unit; suffix = ""; }}'';
-  notifyFail = { message, unit }: ''${curl} -m 5 --retry 0 --data-raw ${message} ${url { unit = unit; suffix = "/fail"; }}'';
-  notifyPingStart = { unit }: ''${curl} -m 5 --retry 0 ${url { unit = unit; suffix = "/start"; }}'';
-  notifyPing = { unit }: ''${curl} -m 5 --retry 0 ${url { unit = unit; suffix = ""; }}'';
+  notify = { unit, suffix }: ''${curl} -m 5 --retry 0 ${url { unit = unit; suffix = suffix; }}'';
+  notifyPing = { unit }: ''${notify { unit = unit; suffix = ""; }}'';
+  notifyFail = { unit }: ''${notify { unit = unit; suffix = "/fail"; }}'';
+  notifyStart = { unit }: ''${notify { unit = unit; suffix = "/start"; }}'';
 
   ### Main functions
 
   notifyOnStop = { unit }: pkgs.writeShellScript "notifyOnStop-${unit}" ''
     if [ "$SERVICE_RESULT" == "success" ]; then
-      MESSAGE="Service finished with: $SERVICE_RESULT"
-      ${notify { message = "$MESSAGE"; unit = unit; }}
+      ${notify { unit = unit; }}
     else
-      LOGS=$(${journalctl} -u ${unit} -n 20 --no-pager)
-      MESSAGE="${unit} failed: $SERVICE_RESULT \n $LOGS"
-      ${notifyFail { message = "$MESSAGE"; unit = unit; }}
+      ${notifyFail { unit = unit; }}
     fi
   '';
 
