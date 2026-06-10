@@ -29,6 +29,9 @@ in {
         # Run only once per boot
         touch /run/on-boot.done
 
+        # Wait up to 2 minutes for wireguard interface to connect to peers
+        ${scripts.pingLoop}
+
         # Booting
         ${scripts.notifyPing { unit = "boot"; }}
 

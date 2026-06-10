@@ -8,7 +8,8 @@ let
   journalctl = "${pkgs.systemd}/bin/journalctl";
   btrfs = "${pkgs.btrfs-progs}/bin/btrfs";
   ssh = "${pkgs.openssh}/bin/ssh";
-  #sleep = "${pkgs.coreutils}/bin/sleep";
+  sleep = "${pkgs.coreutils}/bin/sleep";
+  ping = "${pkgs.iputils}/bin/ping";
   
   ### Helper functions
 
@@ -51,6 +52,15 @@ let
       ${echo} "Backup ${name} complete."
     '') config.host.backups
   );
+
+  pingLoop = ''
+    i=0
+    until ${ping} -c1 -W2 ${config.host.notify-target} > /dev/null 2>&1; do
+      ${sleep} 5
+      i=$((i+1))
+      [ $i -ge 24 ] && exit 1
+    done
+  '';
 
   writeRunningStopContainers = ''
     set -eu
@@ -126,5 +136,5 @@ let
 
 in
 {
-  inherit dateTime notify notifyPing notifyStart notifyFail notifyOnStop snapshotLoop backupLoop writeRunningStopContainers restartContainersInRunning manual-shutdown manual-reboot manual-stop-containers check-url manual-backup;
+  inherit dateTime notify notifyPing notifyStart notifyFail notifyOnStop pingLoop snapshotLoop backupLoop writeRunningStopContainers restartContainersInRunning manual-shutdown manual-reboot manual-stop-containers check-url manual-backup;
 }
