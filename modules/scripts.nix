@@ -79,7 +79,24 @@ let
   check-url = pkgs.writeShellScriptBin "check-url" ''
     ${echo} ${url { unit = "check-url"; suffix = "suffix"; }}
   '';
+
+  copyPaths = {
+    configs = { from = "/tmp/src-A"; to = "/tmp/dst-A"; };
+    secrets = { from = "/tmp/src-B"; to = "/tmp/dst-B"; };
+  };
+
+  # Build the copy commands at eval time from the attrset
+  copyScript = pkgs.writeShellScript "copy-paths" (
+    lib.concatStringsSep "\n" (
+      lib.mapAttrsToList (name: p: ''
+        echo "Copying ${name}: ${p.from} -> ${p.to}"
+        mkdir -p "${p.to}"
+        cp -r "${p.from}/." "${p.to}/"
+      '') copyPaths
+    )
+  );
+
 in
 {
-  inherit dateTime notify notifyPing notifyStart notifyFail notifyOnStop writeRunningStopContainers restartContainersInRunning manual-shutdown manual-reboot manual-stop-containers check-url;
+  inherit dateTime notify notifyPing notifyStart notifyFail notifyOnStop writeRunningStopContainers restartContainersInRunning manual-shutdown manual-reboot manual-stop-containers check-url copyScript;
 }
