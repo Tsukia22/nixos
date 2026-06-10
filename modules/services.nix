@@ -19,10 +19,14 @@ in {
   systemd.services.on-boot = {
     after = [ "podman.service" "wg-quick-wg-mesh.service" ];
     wantedBy = [ "multi-user.target" ];
-    description = "Run on boot";
+    description = "Run once on boot";
+    unitConfig.ConditionPathExists = "!/run/on-boot.done";
     serviceConfig = {
       Type = "oneshot";
       ExecStart = pkgs.writeShellScript "on-boot" ''
+        # Run only once per boot
+        touch /run/on-boot.done
+
         # Booting
         ${scripts.notifyPing { unit = "boot"; }}
 
