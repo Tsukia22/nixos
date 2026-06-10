@@ -98,15 +98,15 @@ let
 
   # Hard-coded manual backup script
   manual-backup = pkgs.writeShellScriptBin "manual-backup" ''
-    set -eu
-    NAME="${1:-}"
-    SOURCE="${2:-}"
-    if [[ -z "$NAME" ]] || [[ -z "$SOURCE" ]]; then
+    if [[ -z "$1" ]] || [[ -z "$2" ]]; then
       ${echo} "Usage: manual-backup <name> <path>"
       ${echo} "manual-backup volumes /home/kami/.local/share/containers/storage/volumes"
       ${echo} "manual-backup immich /home/kami/stacks/immich/library/library"
       exit 1
     fi
+    set -eu
+    NAME="$1"
+    SOURCE="$2"
     ${echo} $(date +"%Y-%m-%d %H:%M:%S")
     ${echo} "Creating snapshot of $NAME"
     btrfs subvolume snapshot -r $SOURCE /var/snapshots/$NAME/$NAME-$(date +%Y%m%d%H%M%S)
