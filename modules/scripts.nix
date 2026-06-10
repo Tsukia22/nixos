@@ -99,8 +99,8 @@ let
   # Hard-coded manual backup script
   manual-backup = pkgs.writeShellScriptBin "manual-backup" ''
     set -eu
-    NAME="$1:-"
-    SOURCE="$2:-"
+    NAME="${1:-}"
+    SOURCE="${2:-}"
     if [[ -z "$NAME" ]] || [[ -z "$SOURCE" ]]; then
       ${echo} "Usage: manual-backup <name> <path>"
       ${echo} "manual-backup volumes /home/kami/.local/share/containers/storage/volumes"
