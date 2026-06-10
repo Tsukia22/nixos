@@ -89,7 +89,7 @@ let
   copyScript = pkgs.writeShellScriptBin "copy-paths" (
     lib.concatStringsSep "\n" (
       lib.mapAttrsToList (name: p: ''
-        echo "Copying ${name}: ${p.from} -> ${p.to}"
+        ${echo} "Copying ${name}: ${p.from} -> ${p.to}"
         mkdir -p "${p.to}"
         cp -r "${p.from}/." "${p.to}/"
       '') copyPaths
