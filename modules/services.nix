@@ -2,7 +2,7 @@
 let
   scripts = import ./scripts.nix { inherit config lib pkgs; };
 in {
-  environment.systemPackages = [ scripts.manual-shutdown scripts.manual-reboot scripts.manual-stop-containers scripts.check-url scripts.snapshot-loop scripts.backup-loop ];
+  environment.systemPackages = [ scripts.manual-shutdown scripts.manual-reboot scripts.manual-stop-containers scripts.check-url scripts.manual-backup ];
   
   systemd.services.test-fail = {
     description = "Test failed service";
@@ -73,6 +73,23 @@ in {
       ExecStopPost = "${scripts.notifyOnStop { unit = "update-nix"; }}";
     };
   };
+
+  systemd.services.auto-backup = {
+    after = [ "auto-update.service" ];
+    description = "Auto snapshot and backup according to host options";
+    serviceConfig = {
+      Type = "oneshot";
+      StandardOutput = "append:/root/backup-service.log";
+      StandardError = "append:/root/backup-service.log";
+      ExecStart = pkgs.writeShellScript "auto-backup" ''
+        ${scripts.notifyStart { unit = "auto-backup"; }}
+        ${scripts.snapshotLoop}
+        ${scripts.backupLoop}
+        ${scripts.notifyPing { unit = "auto-backup"; }}
+      '';
+      ExecStopPost = "${scripts.notifyOnStop { unit = "auto-backup"; }}";
+    };
+  };
   
   systemd.services.maintenance = {
     description = "Maintenance";
@@ -92,7 +109,7 @@ in {
         ${scripts.writeRunningStopContainers}
 
         # auto-backup.service host config
-        # skip for now, testing... #systemctl start auto-backup.service
+        systemctl start auto-backup.service
 
         # Update NixOS
         systemctl start update-nix.service

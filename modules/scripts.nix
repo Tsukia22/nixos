@@ -33,6 +33,26 @@ let
     fi
   '';
 
+  snapshotLoop = lib.concatStringsSep "\n" (
+    lib.mapAttrsToList (name: p: ''
+      ${echo} "Creating snapshot of ${name}"
+      btrfs subvolume snapshot -r ${p.from} ${p.to}/${name}-$(date +%Y%m%d)
+      ${echo} "Snapshot created"
+    '') config.host.snapshots
+  );
+
+  # TODO: Add some kind of btrfs send confirmation the snapshot is fully received.
+  backupLoop = lib.concatStringsSep "\n" (
+    lib.mapAttrsToList (name: p: ''
+      ${echo} "Creating remote backup: sending ${name} to ${p.remote}"
+      PREV=$(ls ${p.from} | sort | tail -2 | head -1)
+      CURR=$(ls ${p.from} | sort | tail -1)
+      ${echo} "$PREV -> $CURR"
+      ${btrfs} send -p ${p.from}/$PREV ${p.from}/$CURR | ${ssh} $HOSTNAME@${p.remote} -p 1993 "sudo btrfs receive ${p.to}"
+      ${echo} "Backup ${name} complete."
+    '') config.host.backups
+  );
+
   writeRunningStopContainers = ''
     set -eu
     ${dateTime}
@@ -56,31 +76,6 @@ let
     ${echo} "Done starting containers in running"
   '';
 
-  # TODO: convert ScriptBin to Script and implement in service
-
-  snapshot-loop = pkgs.writeShellScriptBin "snapshot-loop" (
-    lib.concatStringsSep "\n" (
-      lib.mapAttrsToList (name: p: ''
-        ${echo} "Creating snapshot of ${name}"
-        btrfs subvolume snapshot -r ${p.from} ${p.to}/${name}-$(date +%Y%m%d)
-        ${echo} "Snapshot created"
-      '') config.host.snapshots
-    )
-  );
-
-  backup-loop = pkgs.writeShellScriptBin "backup-loop" (
-    lib.concatStringsSep "\n" (
-      lib.mapAttrsToList (name: p: ''
-        ${echo} "Creating remote backup: sending ${name} to ${p.remote}"
-        PREV=$(ls ${p.from} | sort | tail -2 | head -1)
-        CURR=$(ls ${p.from} | sort | tail -1)
-        ${echo} "$PREV -> $CURR"
-        ${btrfs} send -p ${p.from}/$PREV ${p.from}/$CURR | ${ssh} $HOSTNAME@${p.remote} -p 1993 "sudo btrfs receive ${p.to}"
-        ${echo} "Backup ${name} complete."
-      '') config.host.backups
-    )
-  );
-
   ### CLI scripts
 
   manual-shutdown = pkgs.writeShellScriptBin "manual-shutdown" ''
@@ -101,6 +96,29 @@ let
     ${echo} "Stopped containers"
   '';
 
+  # Hard-coded manual backup script
+  manual-backup = pkgs.writeShellScriptBin "manual-backup" ''
+    set -eu
+    if [[ -z "$1" ]] || [[ -z "$2" ]]; then
+      ${echo} "Usage: manual-backup <name> <path>"
+      ${echo} "manual-backup volumes /home/kami/.local/share/containers/storage/volumes"
+      ${echo} "manual-backup immich /home/kami/stacks/immich/library/library"
+      exit 1
+    fi
+    NAME="$1"
+    SOURCE="$2"
+    ${echo} $(date +"%Y-%m-%d %H:%M:%S")
+    ${echo} "Creating snapshot of $NAME"
+    btrfs subvolume snapshot -r ${source} /var/snapshots/$NAME/$NAME-$(date +%Y%m%d%H%M%S)
+    ${echo} "Snapshot created"
+    ${echo} "Creating remote backup: sending $NAME to 10.100.0.2"
+    PREV=$(ls /var/snapshots/$NAME/ | sort | tail -2 | head -1)
+    CURR=$(ls /var/snapshots/$NAME/ | sort | tail -1)
+    ${echo} "$PREV -> $CURR"
+    ${btrfs} send -p /var/snapshots/$NAME/$PREV /var/snapshots/$NAME/$CURR | ssh $HOSTNAME@10.100.0.2 -p 1993 "sudo btrfs receive /mnt/hdd/$HOSTNAME/backups/$NAME"
+    ${echo} "Backup $NAME complete."
+  '';
+
   ### For testing
 
   check-url = pkgs.writeShellScriptBin "check-url" ''
@@ -109,5 +127,5 @@ let
 
 in
 {
-  inherit dateTime notify notifyPing notifyStart notifyFail notifyOnStop writeRunningStopContainers restartContainersInRunning manual-shutdown manual-reboot manual-stop-containers check-url snapshot-loop backup-loop;
+  inherit dateTime notify notifyPing notifyStart notifyFail notifyOnStop snapshotLoop backupLoop writeRunningStopContainers restartContainersInRunning manual-shutdown manual-reboot manual-stop-containers check-url manual-backup;
 }
