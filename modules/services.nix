@@ -2,7 +2,7 @@
 let
   scripts = import ./scripts.nix { inherit config lib pkgs; };
 in {
-  environment.systemPackages = [ scripts.manual-shutdown scripts.manual-reboot scripts.manual-stop-containers scripts.check-url scripts.copyScript ];
+  environment.systemPackages = [ scripts.manual-shutdown scripts.manual-reboot scripts.manual-stop-containers scripts.check-url scripts.snapshot-loop scripts.backup-loop ];
   
   systemd.services.test-fail = {
     description = "Test failed service";

@@ -54,11 +54,20 @@
   networking.wg-quick.interfaces.wg-net.address = [ "10.200.0.1/24" ];
 
   # Host options/configs
-  # Example: ${config.host.domain}
+  # Usage example: ${config.host.domain}
   host.domain = "x.x";
-  host.backup-target = "10.100.0.2";
   host.notify-target = "10.100.0.2";
   host.notify-key = "3sl7poangptq1mtladsioa";
+  # Snapshots require an existing valid btrfs subvolume (manual one-time operation)
+  host.snapshots = {
+    volumes = { from = "/home/kami/.local/share/containers/storage/volumes"; to = "/var/snapshots/volumes/"; };
+  };
+#    immich = { from = "/home/kami/stacks/immich/library/library"; to = "/var/snapshots/immich/"; };
+  # Backups require a pre-existing remote parent snapshot (manual one-time operation)
+  host.backups = {
+    volumes = { remote = "10.100.0.2"; from = "/tmp/src-configs/var/snapshots/volumes/"; to = "/mnt/hdd/$HOSTNAME/backups/volumes/"; };
+  };
+#    immich = { remote = "10.100.0.2"; from = "/tmp/src-configs/var/snapshots/immich/"; to = "/mnt/hdd/$HOSTNAME/backups/immich/"; };
 
   system.stateVersion = "25.05";
 }
