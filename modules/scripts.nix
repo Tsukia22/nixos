@@ -86,7 +86,7 @@ let
   };
 
   # Build the copy commands at eval time from the attrset
-  copyScript = pkgs.writeShellScript "copy-paths" (
+  copyScript = pkgs.writeShellScriptBin "copy-paths" (
     lib.concatStringsSep "\n" (
       lib.mapAttrsToList (name: p: ''
         echo "Copying ${name}: ${p.from} -> ${p.to}"
