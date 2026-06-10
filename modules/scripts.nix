@@ -17,7 +17,6 @@ let
   dateTime = ''${echo} $(date +"%Y-%m-%d %H:%M:%S")'';
 
   url = { unit, suffix }: ''http://${config.host.notify-target}:25558/ping/${config.host.notify-key}/"$HOSTNAME"${if unit != "" then "-${unit}" else ""}${suffix}?create=1'';
-  # TODO: temp retry 0
   notify = { unit, suffix }: ''${curl} -m 5 --retry 0 ${url { unit = unit; suffix = suffix; }} || true'';
   notifyPing = { unit }: ''${notify { unit = unit; suffix = ""; }}'';
   notifyFail = { unit }: ''${notify { unit = unit; suffix = "/fail"; }}'';
