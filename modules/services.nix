@@ -24,6 +24,8 @@ in {
     serviceConfig = {
       Type = "oneshot";
       ExecStart = pkgs.writeShellScript "on-boot" ''
+        set -eux # error check and debug
+
         # Run only once per boot
         touch /run/on-boot.done
 
