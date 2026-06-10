@@ -109,7 +109,7 @@ let
     SOURCE="$2"
     ${echo} $(date +"%Y-%m-%d %H:%M:%S")
     ${echo} "Creating snapshot of $NAME"
-    btrfs subvolume snapshot -r ${source} /var/snapshots/$NAME/$NAME-$(date +%Y%m%d%H%M%S)
+    btrfs subvolume snapshot -r $SOURCE /var/snapshots/$NAME/$NAME-$(date +%Y%m%d%H%M%S)
     ${echo} "Snapshot created"
     ${echo} "Creating remote backup: sending $NAME to 10.100.0.2"
     PREV=$(ls /var/snapshots/$NAME/ | sort | tail -2 | head -1)
