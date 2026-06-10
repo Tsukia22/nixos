@@ -23,7 +23,7 @@
 
         echo "$PREV -> $CURR"
 
-        btrfs send -p /var/snapshots/volumes/$PREV /var/snapshots/volumes/$CURR | ssh xan01@10.100.0.2 -p 1993 "sudo btrfs receive /mnt/hdd/xan01/backups/volumes/"
+        btrfs send -p /var/snapshots/volumes/$PREV /var/snapshots/volumes/$CURR | ssh $HOSTNAME@${config.host.backup-target} -p 1993 "sudo btrfs receive /mnt/hdd/$HOSTNAME/backups/volumes/"
 
         echo "Backup volumes complete."
         echo "Backing up immich..."
@@ -35,11 +35,13 @@
 
         echo "$PREV -> $CURR"
 
-        btrfs send -p /var/snapshots/immich/$PREV /var/snapshots/immich/$CURR | ssh xan01@10.100.0.2 -p 1993 "sudo btrfs receive /mnt/hdd/xan01/backups/immich/"
+        btrfs send -p /var/snapshots/immich/$PREV /var/snapshots/immich/$CURR | ssh $HOSTNAME@${config.host.backup-target} -p 1993 "sudo btrfs receive /mnt/hdd/$HOSTNAME/backups/immich/"
 
         echo "Backup immich complete."
       '';
     };
+
+    # TODO: Add some kind of btrfs send confirmation the snapshot is fully received.
     
     unitConfig = {
       OnSuccess = "reboot-after-maintenance.service";
