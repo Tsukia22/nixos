@@ -65,9 +65,9 @@
 #    immich = { from = "/home/kami/stacks/immich/library/library"; to = "/var/snapshots/immich"; };
   # Backups require a pre-existing remote parent snapshot (manual one-time operation)
   host.backups = {
-    volumes = { remote = "10.100.0.2"; from = "/tmp/src-configs/var/snapshots/volumes"; to = "/mnt/hdd/$HOSTNAME/backups/volumes"; };
+    volumes = { remote = "10.100.0.2"; from = "/var/snapshots/volumes"; to = "/mnt/hdd/$HOSTNAME/backups/volumes"; };
   };
-#    immich = { remote = "10.100.0.2"; from = "/tmp/src-configs/var/snapshots/immich"; to = "/mnt/hdd/$HOSTNAME/backups/immich"; };
+#    immich = { remote = "10.100.0.2"; from = "/var/snapshots/immich"; to = "/mnt/hdd/$HOSTNAME/backups/immich"; };
 
   system.stateVersion = "25.05";
 }
