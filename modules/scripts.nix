@@ -64,7 +64,7 @@ let
         ${echo} "Creating snapshot of ${name}"
         btrfs subvolume snapshot -r ${p.from} ${p.to}/${p.name}-$(date +%Y%m%d)
         ${echo} "Snapshot created"
-      '') ${config.host.snapshots}
+      '') config.host.snapshots
     )
   );
 
@@ -77,7 +77,7 @@ let
         ${echo} "$PREV -> $CURR"
         ${btrfs} send -p ${p.from}/$PREV ${p.from}/$CURR | ${ssh} $HOSTNAME@${p.remote} -p 1993 "sudo btrfs receive ${p.to}"
         ${echo} "Backup ${name} complete."
-      '') ${config.host.backups}
+      '') config.host.backups
     )
   );
 
