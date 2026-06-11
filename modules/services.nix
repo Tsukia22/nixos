@@ -38,7 +38,7 @@ in {
         # Services to start on boot
         systemctl start podman-restart
       '';
-      ExecStartPost = "${scripts.notifyOnStop { unit = "reboot"; }}";
+      ExecStopPost = "${scripts.notifyOnStop { unit = "reboot"; }}";
     };
   };
 
@@ -54,7 +54,7 @@ in {
         ${scripts.notifyStart { unit = "podman-restart"; }}
         ${scripts.restartContainersInRunning}
       '';
-      ExecStartPost = "${scripts.notifyOnStop { unit = "podman-restart"; }}";
+      ExecStopPost = "${scripts.notifyOnStop { unit = "podman-restart"; }}";
     };
   };
   
@@ -78,7 +78,7 @@ in {
         nixos-rebuild boot --impure --flake /root/nixos#$HOSTNAME
         echo "Update complete. Changes will apply on boot."
       '';
-      ExecStartPost = "${scripts.notifyOnStop { unit = "update-nix"; }}";
+      ExecStopPost = "${scripts.notifyOnStop { unit = "update-nix"; }}";
     };
   };
 
@@ -94,7 +94,7 @@ in {
         ${scripts.snapshotLoop}
         ${scripts.backupLoop}
       '';
-      ExecStartPost = "${scripts.notifyOnStop { unit = "auto-backup"; }}";
+      ExecStopPost = "${scripts.notifyOnStop { unit = "auto-backup"; }}";
     };
   };
   
@@ -125,7 +125,7 @@ in {
         ${scripts.notifyStart { unit = "reboot"; }}
         shutdown -r
       '';
-      ExecStartPost = "${scripts.notifyOnStop { unit = "maintenance"; }}";
+      ExecStopPost = "${scripts.notifyOnStop { unit = "maintenance"; }}";
     };
   };
 }
