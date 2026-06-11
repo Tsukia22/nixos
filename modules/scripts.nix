@@ -36,7 +36,7 @@ let
   snapshotLoop = lib.concatStringsSep "\n" (
     lib.mapAttrsToList (name: p: ''
       ${echo} "Creating snapshot of ${name}"
-      btrfs subvolume snapshot -r ${p.from} ${p.to}/${name}-$(date +%Y%m%d)
+      ${btrfs} subvolume snapshot -r ${p.from} ${p.to}/${name}-$(date +%Y%m%d)
       ${echo} "Snapshot created"
     '') config.host.snapshots
   );
