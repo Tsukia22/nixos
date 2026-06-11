@@ -47,6 +47,7 @@ in {
     wantedBy = lib.mkForce [];
     serviceConfig = {
       Type = "oneshot";
+      RemainAfterExit = false;
       StandardOutput = "append:/home/kami/podman-restart-service.log";
       StandardError = "append:/home/kami/podman-restart-service.log";
       ExecStart = pkgs.writeShellScript "podman-restart" ''
