@@ -36,13 +36,13 @@
     ];
   };
 
-#  systemd.timers.maintenance = {
-#    wantedBy = [ "timers.target" ];
-#    timerConfig = {
-#      OnCalendar = "03:30";
-#      Persistent = true;
-#    };
-#  };
+  systemd.timers.maintenance = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "03:30";
+      Persistent = true;
+    };
+  };
 
   # Networking
   networking.hostName = "xan01";
