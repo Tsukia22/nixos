@@ -32,15 +32,13 @@ in {
         # Wait up to 2 minutes for wireguard interface to connect to peers
         ${scripts.pingLoop}
 
-        # Booting
+        # Done booting
         ${scripts.notifyPing { unit = "boot"; }}
 
         # Services to start on boot
         systemctl start podman-restart
-
-        # Done rebooting
-        ${scripts.notifyPing { unit = "reboot"; }}
       '';
+      ExecStartPost = "${scripts.notifyOnStop { unit = "reboot"; }}";
     };
   };
 
@@ -54,9 +52,8 @@ in {
       ExecStart = pkgs.writeShellScript "podman-restart" ''
         ${scripts.notifyStart { unit = "podman-restart"; }}
         ${scripts.restartContainersInRunning}
-        ${scripts.notifyPing { unit = "podman-restart"; }}
       '';
-      ExecStopPost = "${scripts.notifyOnStop { unit = "podman-restart"; }}";
+      ExecStartPost = "${scripts.notifyOnStop { unit = "podman-restart"; }}";
     };
   };
   
@@ -71,6 +68,7 @@ in {
       ExecStart = pkgs.writeShellScript "podman-restart" ''
         set -eu
         ${scripts.dateTime}
+        ${scripts.notifyStart { unit = "update-nix"; }}
         
         echo "Updating flake inputs..."
         nix flake update --flake /root/nixos
@@ -79,7 +77,7 @@ in {
         nixos-rebuild boot --impure --flake /root/nixos#$HOSTNAME
         echo "Update complete. Changes will apply on boot."
       '';
-      ExecStopPost = "${scripts.notifyOnStop { unit = "update-nix"; }}";
+      ExecStartPost = "${scripts.notifyOnStop { unit = "update-nix"; }}";
     };
   };
 
@@ -94,9 +92,8 @@ in {
         ${scripts.notifyStart { unit = "auto-backup"; }}
         ${scripts.snapshotLoop}
         ${scripts.backupLoop}
-        ${scripts.notifyPing { unit = "auto-backup"; }}
       '';
-      ExecStopPost = "${scripts.notifyOnStop { unit = "auto-backup"; }}";
+      ExecStartPost = "${scripts.notifyOnStop { unit = "auto-backup"; }}";
     };
   };
   
@@ -127,7 +124,7 @@ in {
         ${scripts.notifyStart { unit = "reboot"; }}
         shutdown -r
       '';
-      ExecStopPost = "${scripts.notifyOnStop { unit = "maintenance"; }}";
+      ExecStartPost = "${scripts.notifyOnStop { unit = "maintenance"; }}";
     };
   };
 }
