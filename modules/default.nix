@@ -45,6 +45,7 @@
     enable = true;
     maxretry = 3;
     bantime = "2h";
+    ignoreIP = [ "127.0.0.1/8" "::1" "192.168.1.0/24" ];
     bantime-increment = {
       enable = true;
       multipliers = "1 2 3 4 6 8 12";
