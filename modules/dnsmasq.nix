@@ -30,6 +30,12 @@
         "/tsu.vpn/10.200.0.3"
         "/t.t/10.200.0.3"
         "/tsu.internal/10.200.0.3"
+        "/kak.hoofd/10.200.0.31"
+        "/tsu.pc/10.200.0.31"
+        "/tsukia.pc/10.200.0.31"
+        "/flik.ker/10.200.0.12"
+        "/xan.pc/10.200.0.12"
+        "/xanedithas.pc/10.200.0.12"
       ];
       srv-host = [
         "_minecraft._tcp.greg.tsu,t.t,50400,0,5"
