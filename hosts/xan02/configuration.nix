@@ -68,8 +68,6 @@
   host.domain = "10.100.0.2";
   host.notify-target = "10.100.0.2";
   host.notify-key = "3sl7poangptq1mtladsioa";
-  host.snapshots = {};
-  host.backups = {};
 
   system.stateVersion = "25.11";
 }
