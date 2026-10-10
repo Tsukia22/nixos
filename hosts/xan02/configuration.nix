@@ -12,7 +12,6 @@
     ../../modules/wg-mesh.nix
     ../../modules/host-options.nix
     ./firewall.nix
-    ./backup.nix
   ];
 
   # Bootloader
