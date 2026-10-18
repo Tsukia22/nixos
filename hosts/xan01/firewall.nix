@@ -25,6 +25,10 @@
           # SSH
           tcp dport 1993 accept
 
+          # FTP
+          tcp dport 3921 accept
+          tcp dport 12000-12099 accept
+
           # HTTP/HTTPS
           tcp dport { 80, 443 } accept
 
