@@ -23,6 +23,10 @@
           inherit system;
           modules = [ ./hosts/xan02/configuration.nix ];
         };
+        tsu02 = nixpkgs.lib.nixosSystem {
+          inherit system;
+          modules = [ ./hosts/tsu02/configuration.nix ];
+        };
       };
     };
 }
